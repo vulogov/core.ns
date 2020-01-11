@@ -18,13 +18,14 @@ def NS(**kw):
     nsMkdir(ns, "/tmp")
     nsMkdir(ns, "/scripts")
     nsMkdir(ns, "/templates")
+    nsMkdir(ns, "/home")
     nsSet(ns, "/sys/error", False)
     nsSet(ns, "/sys/error.msg", None)
     nsSet(ns, "/sys/log/messages", queue.Queue())
     ns.update(kw)
     return ns
 
-def nsError(ns, msg=None):
+def nsGlobalError(ns, msg=None):
     nsSet(ns, "/sys/error", True)
     nsSet(ns, "/sys/error.msg", msg)
 

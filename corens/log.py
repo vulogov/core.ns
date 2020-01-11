@@ -1,6 +1,6 @@
 import time
 import uuid
-from corens.ns import *
+from corens.ns import nsGlobalError, nsGet, nsLs
 
 LOG_LEVELS=['debug', 'info', 'warning', 'error', 'critical', 'panic']
 
@@ -8,8 +8,8 @@ def nsLog(ns, lvl, msg, **kw):
     out = {'level': lvl, 'msg': msg % kw, 'id':str(uuid.uuid4()), 'stamp': time.time()}
     q = nsGet(ns, "/sys/log/messages")
     q.put_nowait(out)
-    if lvl >=3:
-        nsError(ns, out)
+    if lvl >=4:
+        nsGlobalError(ns, out)
     return out
 
 def nsDebug(ns, msg, **kw):
