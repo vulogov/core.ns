@@ -1,3 +1,5 @@
+import builtins
+import os.path
 import pkgutil
 import importlib
 from toolz import partial
@@ -16,7 +18,7 @@ def nsImport(ns, module):
             nsSet(ns, k, partial(_lib[k], ns))
     return ns
 
-def F(ns, name):
+def f(ns, name):
     if name[0] == "/":
         fun = nsGet(ns, name, None)
         if fun is None:
@@ -30,3 +32,11 @@ def F(ns, name):
         return fun
     nsError(ns, "Call for unknown function %(fun)s", fun=name)
     return None
+
+def F(ns, *funcs):
+    for _f in funcs:
+        _nf = f(ns, _f)
+        if _nf is None:
+            continue
+        setattr(builtins, os.path.basename(_f), _nf)
+    return ns

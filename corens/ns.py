@@ -42,6 +42,7 @@ def nsMkdir(ns, path, **kw):
         dnew(ns, path, kw)
         dnew(ns, "{}/__dir__".format(path), True)
         dnew(ns, "{}/__id__".format(path), str(uuid.uuid4()))
+        dnew(ns, "{}/__name__".format(path), path)
     return nsGet(ns, path, None)
 
 def nsGet(ns, path, default=None):
