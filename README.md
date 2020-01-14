@@ -28,4 +28,4 @@ and do the first try-run of the tool.
 
   In this example, you are creating a namespace, alongside with partially-evaluated functions for resolving and executing functions in namespace and partially-evaluated function for exporting namespace functions into a builtin functions. Then you are resolving and executing partially-evaluated function referred as _/bin/stamp_ inside namespace. This function will return you a current timestamp.
 
-  If you not understanding some of those concepts, that is all-right. I will explain them later on.
+## Why bother ?

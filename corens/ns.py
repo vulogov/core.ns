@@ -64,7 +64,8 @@ def nsLs(ns, path):
 def nsSet(ns, key, val):
     try:
         v = dget(ns, key)
-        dset(ns, key, val)
+        if nsGet(ns, "/config/var.redefine", True) is True:
+            dset(ns, key, val)
     except KeyError:
         dnew(ns, key, val)
     return ns

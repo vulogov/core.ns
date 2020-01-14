@@ -25,7 +25,7 @@ def f(ns, name):
             nsError(ns, "Call for unknown full-path function %(fun)s", fun=name)
             return None
         return fun
-    for p in ["/home", "/bin", "/sbin"]:
+    for p in nsGet(ns, "/config/path"):
         fun = nsGet(ns, "{}/{}".format(p, name), None)
         if fun is None:
             continue
