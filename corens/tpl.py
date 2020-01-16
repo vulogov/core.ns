@@ -1,4 +1,4 @@
-import collections
+from collections.abc import Callable
 from toolz import partial
 from corens.ns import *
 
@@ -17,8 +17,11 @@ def nsMk(ns, name):
     ctx = nsMkdir(ns, _path)
     for i in _t:
         _i = "{}/{}".format(_path, i)
-        if isinstance(_t[i], collections.Callable) is True:
+        if isinstance(_t[i], Callable) is True:
             nsSet(ns, _i, partial(_t[i], ns, ctx))
         else:
             nsSet(ns, _i, _t[i])
+    _init = nsGet(ns, "{}/{}/init".format(dev_path, name), None)
+    if _init is not None and isinstance(_init, Callable) is True:
+        ns = _init()
     return ns
