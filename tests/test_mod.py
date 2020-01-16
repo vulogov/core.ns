@@ -15,3 +15,19 @@ def test_mod_2():
     ns, f, F = NS()
     F("stamp")
     assert type(stamp()) == type(0.0)
+
+def test_mod_3():
+    ns, f, F = NS()
+    V = f("V")
+    assert V("/config/answer") == 42
+
+def test_mod_4():
+    ns, f, F = NS()
+    V = f("V")
+    assert V("/config/answer", 43) == 43
+
+def test_mod_5():
+    ns, f, F = NS()
+    V = f("V")
+    V("/config/var.redefine", False)
+    assert V("/config/answer", 43) == 42

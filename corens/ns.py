@@ -19,6 +19,7 @@ def NS(**kw):
     nsMkdir(ns, "/scripts")
     nsMkdir(ns, "/templates")
     nsMkdir(ns, "/home")
+    nsMkdir(ns, "/dev")
     nsSet(ns, "/sys/error", False)
     nsSet(ns, "/sys/error.msg", None)
     nsSet(ns, "/sys/log/messages", queue.Queue())
@@ -69,3 +70,12 @@ def nsSet(ns, key, val):
     except KeyError:
         dnew(ns, key, val)
     return ns
+
+def V(ns, name, val=None):
+    if name[0] != "/":
+        name = "/home/{}".format(name)
+    if val is None:
+        return nsGet(ns, name)
+    else:
+        ns =  nsSet(ns, name, val)
+        return nsGet(ns, name)

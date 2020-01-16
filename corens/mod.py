@@ -5,17 +5,40 @@ import importlib
 from toolz import partial
 from corens.ns import *
 from corens.log import *
+from corens.tpl import *
 
-def nsImport(ns, module):
+def nsImport(ns, m):
+    if type(m) == list:
+        for _m in m:
+            ns = _nsImport(ns, _m)
+    elif type(m) == str:
+        return nsImport(ns, m)
+    else:
+        return ns
+    return ns
+
+def I(ns, name, fun):
+    return nsSet(ns, name, partial(fun, ns))
+
+def _nsImport(ns, module):
     for loader, module_name, is_pkg in pkgutil.walk_packages(importlib.import_module(module).__path__):
         _module = loader.find_module(module_name).load_module(module_name)
         try:
             _lib = getattr(_module, '_lib')
         except AttributeError:
-            nsError(ns, "Module %(module)s is missing description", module=module_name)
-            continue
-        for k in _lib:
-            nsSet(ns, k, partial(_lib[k], ns))
+            _lib = None
+            pass
+        try:
+            _tpl = getattr(_module, '_tpl')
+        except AttributeError:
+            _tpl = None
+            pass
+        if _lib is not None:
+            for k in _lib:
+                nsSet(ns, k, partial(_lib[k], ns))
+        if _tpl is not None:
+            for m in _tpl:
+                nsTemplate(ns, m, **_tpl[m])
     return ns
 
 def f(ns, name):
