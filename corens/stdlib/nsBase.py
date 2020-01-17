@@ -3,6 +3,7 @@ from corens.mod import I, nsImport
 from corens.tpl import nsTemplate, nsMk
 from corens.cfg_grammar import nsCfgFSLoad
 from corens.cfg_grammar import nsCfgLoad
+from corens.log import *
 
 
 def n(ns):
@@ -20,6 +21,13 @@ _lib = {
     '/bin/T': nsTemplate,
     '/bin/Mk': nsMk,
     '/bin/C': nsCfgLoad,
-    '/bin/Cfg': nsCfgFSLoad
-
+    '/bin/Cfg': nsCfgFSLoad,
+    '/bin/debug': nsDebug,
+    '/bin/info': nsInfo,
+    '/bin/warning': nsWarning,
+    '/bin/error': nsError,
+    '/bin/critical': nsCritical,
+    '/bin/panic': nsPanic,
+    '/bin/logsize': nsLogSize,
+    '/bin/logprocessor': nsLogProcess
 }

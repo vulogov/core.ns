@@ -1,3 +1,5 @@
+from gevent import monkey  # isort:skip # noqa
+monkey.patch_all()
 import os
 from setuptools import setup, find_packages
 try:

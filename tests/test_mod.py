@@ -1,7 +1,6 @@
 import sys
 import os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-import pytest
 
 tests_dir = os.path.abspath(os.path.join(os.path.dirname(__file__)))
 
@@ -31,3 +30,8 @@ def test_mod_5():
     V = f("V")
     V("/config/var.redefine", False)
     assert V("/config/answer", 43) == 42
+
+def test_mod_6():
+    ns, f, F = NS()
+    Random = f("random")
+    assert len(Random()) == 1

@@ -1,3 +1,5 @@
+from gevent import monkey
+monkey.patch_all() 
 from toolz import partial
 from corens.ns import NS as _NS
 from corens.ns import nsGet
