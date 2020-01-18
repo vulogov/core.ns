@@ -18,6 +18,8 @@ def nsArgs(ns, args=sys.argv):
         a = args.pop(0)
         if a is None or isinstance(a, str) is not True:
             break
+        if len(a) == 0:
+            continue
         if re.match(r'--help', a) is not None:
             if prev is None:
                 hpath = "/help/cmd/default"
