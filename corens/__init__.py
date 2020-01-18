@@ -18,6 +18,6 @@ def NS(*args, **kw):
         _f(ns, "/bin/Cfg")(c)
     cargs = kw.get('args', None)
     if cargs is None:
-        cargs = sys.argv
+        cargs = sys.argv[1:]
     _f(ns, "/bin/args")(cargs)
     return (ns, partial(_f, ns), partial(_F, ns))

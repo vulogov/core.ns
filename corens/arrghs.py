@@ -4,7 +4,7 @@ import clint
 from corens.ns import *
 from corens.help import *
 
-def nsArgs(ns, args=sys.argv):
+def nsArgs(ns, args=sys.argv[1:]):
     path = "/etc/args"
     nsSet(ns, "/etc/argv", [])
     argv = nsGet(ns, "/etc/argv")
