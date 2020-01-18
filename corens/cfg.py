@@ -8,6 +8,7 @@ def nsDefaults(ns):
     nsSet(ns, "/config/dev.path", "/dev")
     nsSet(ns, "/config/cfg.path", ['osfs://.','osfs://tests'])
     nsSet(ns, "/config/cfg.fs", [])
+    nsSet(ns, "/config/cfg.files", [])
     nsSet(ns, "/config/library", ["corens.stdlib"])
     nsSet(ns, "/config/answer", 42)
     for c in nsGet(ns, "/config/cfg.path"):

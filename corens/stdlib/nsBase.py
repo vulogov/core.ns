@@ -4,6 +4,8 @@ from corens.tpl import nsTemplate, nsMk
 from corens.cfg_grammar import nsCfgFSLoad
 from corens.cfg_grammar import nsCfgLoad
 from corens.log import *
+from corens.arrghs import *
+from corens.help import *
 
 
 def n(ns):
@@ -29,5 +31,7 @@ _lib = {
     '/bin/critical': nsCritical,
     '/bin/panic': nsPanic,
     '/bin/logsize': nsLogSize,
-    '/bin/logprocessor': nsLogProcess
+    '/bin/logprocessor': nsLogProcess,
+    '/bin/args': nsArgs,
+    '/bin/help': nsHelp
 }

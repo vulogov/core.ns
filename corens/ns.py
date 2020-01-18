@@ -1,6 +1,6 @@
 import time
 import uuid
-import queue
+from  gevent import queue
 import fnmatch
 from dpath.util import get as dget
 from dpath.util import set as dset
@@ -13,16 +13,22 @@ def NS(**kw):
     nsMkdir(ns, "/sys/log")
     nsMkdir(ns, "/sys/log/channels")
     nsMkdir(ns, "/config")
+    nsMkdir(ns, "/etc")
+    nsMkdir(ns, "/etc/args")
+    nsMkdir(ns, "/help")
+    nsMkdir(ns, "/help/cmd")
     nsMkdir(ns, "/bin")
     nsMkdir(ns, "/sbin")
     nsMkdir(ns, "/tmp")
     nsMkdir(ns, "/scripts")
     nsMkdir(ns, "/templates")
     nsMkdir(ns, "/home")
+    nsMkdir(ns, "/usr/local/bin")
     nsMkdir(ns, "/dev")
     nsSet(ns, "/sys/error", False)
     nsSet(ns, "/sys/error.msg", None)
     nsSet(ns, "/sys/log/messages", queue.Queue())
+    nsSet(ns, "/sys/console", queue.Queue())
     ns.update(kw)
     return ns
 
