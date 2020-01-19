@@ -1,5 +1,6 @@
 from gevent import monkey
-monkey.patch_all()
+if monkey.patch_all() is not True:
+    print("Gevent monkey patching was not succesful")
 import sys
 from toolz import partial
 from corens.ns import NS as _NS
@@ -20,4 +21,5 @@ def NS(*args, **kw):
     if cargs is None:
         cargs = sys.argv[1:]
     _f(ns, "/bin/args")(cargs)
+    _f(ns, "/bin/gevent")()
     return (ns, partial(_f, ns), partial(_F, ns))

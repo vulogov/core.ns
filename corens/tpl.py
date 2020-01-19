@@ -1,3 +1,4 @@
+import re
 from collections.abc import Callable
 from toolz import partial
 from corens.ns import *
@@ -10,12 +11,14 @@ def nsTemplate(ns, name, **kw):
         nsSet(ns, _path, kw[k])
     return ns
 
-def nsMk(ns, name):
+def nsMk(ns, name, *args, **kw):
     dev_path = nsGet(ns, "/config/dev/path", "/dev")
     _path = "{}/{}".format(dev_path, name)
     _t = nsGet(ns, "/templates/{}".format(name))
     ctx = nsMkdir(ns, _path)
     for i in _t:
+        if re.match(r'__(.*)', i) is not None:
+            continue
         _i = "{}/{}".format(_path, i)
         if isinstance(_t[i], Callable) is True:
             nsSet(ns, _i, partial(_t[i], ns, ctx))
@@ -23,5 +26,5 @@ def nsMk(ns, name):
             nsSet(ns, _i, _t[i])
     _init = nsGet(ns, "{}/{}/init".format(dev_path, name), None)
     if _init is not None and isinstance(_init, Callable) is True:
-        ns = _init()
+        ns = _init(*args, **kw)
     return ns
