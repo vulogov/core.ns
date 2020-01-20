@@ -34,6 +34,7 @@ _lib = {
     '/bin/logsize': nsLogSize,
     '/sbin/logprocessor': nsLogProcess,
     '/bin/args': nsArgs,
+    '/bin/cmd': nsCmd,
     '/bin/help': nsHelp,
     '/bin/console': nsConsole,
     '/sbin/consoleprocessor': nsConsoleProcess

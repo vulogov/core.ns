@@ -3,6 +3,7 @@ import re
 import clint
 from corens.ns import *
 from corens.help import *
+from corens.mod import f
 
 def nsArgs(ns, args=sys.argv[1:]):
     path = "/etc/args"
@@ -46,4 +47,14 @@ def nsArgs(ns, args=sys.argv[1:]):
             _path = "{}/{}".format(path, a)
             nsMkdir(ns, _path)
             continue
+    return ns
+
+def nsCmd(ns, *args, **kw):
+    argv = nsGet(ns, "/etc/argv", [])
+    root = nsGet(ns, "/config/cmd.path")
+    kw.update(nsGet(ns, "/config/cmd.kw"))
+    out = None
+    for k in argv:
+        _args = tuple([out,] + list(args))
+        out = f(ns, "{}/{}".format(root, k))(*_args, **kw)
     return ns

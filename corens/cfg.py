@@ -10,6 +10,9 @@ def nsDefaults(ns):
     nsSet(ns, "/config/cfg.fs", [])
     nsSet(ns, "/config/cfg.files", [])
     nsSet(ns, "/config/library", ["corens.stdlib"])
+    nsSet(ns, "/config/user.library", [])
+    nsSet(ns, "/config/cmd.path", "/usr/local/bin")
+    nsSet(ns, "/config/cmd.kw", {})
     nsSet(ns, "/config/answer", 42)
     for c in nsGet(ns, "/config/cfg.path"):
         nsGet(ns, "/config/cfg.fs").append(open_fs(c))
