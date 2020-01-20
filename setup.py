@@ -9,13 +9,38 @@ except ImportError:
     # for pip <= 9.0.3
     from pip.req import parse_requirements
 
+root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__)))
+VERSION_PY="""
+VERSION='%s'
+RELEASE='%s'
+URL='%s'
+AUTHOR='%s'
+AUTHOR_EMAIL='%s'
+LICENSE='%s'
+
+def nsVersion(ns):
+    return VERSION
+def nsRelease(ns):
+    return RELEASE
+"""
+
 name="corens"
 version="0.0"
 release="0.0.1"
+author='Vladimir Ulogov'
+author_email='vladimir.ulogov@me.com'
+url='https://github.com/vulogov/core.ns'
+license='GPL3'
 
 def load_requirements(fname):
     reqs = parse_requirements(fname, session="test")
     return [str(ir.req) for ir in reqs]
+
+def write_version(fname):
+    f = open("{}/{}".format(root_dir, fname), 'w')
+    f.write(VERSION_PY % (version, release, url, author, author_email, license))
+
+write_version("corens/version.py")
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
@@ -36,9 +61,9 @@ setup(name=name,
         "Topic :: Software Development :: Libraries :: Application Frameworks"
     ],
     python_requires='>=3.6',
-    url='https://github.com/vulogov/core.ns',
-    author='Vladimir Ulogov',
-    author_email='vladimir.ulogov@me.com',
-    license='GPL3',
+    url=url,
+    author=author,
+    author_email=author_email,
+    license=license,
     install_requires=load_requirements("requirements.txt"),
     packages=find_packages())
