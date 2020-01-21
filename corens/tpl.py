@@ -12,7 +12,9 @@ def nsTemplate(ns, name, **kw):
     return ns
 
 def nsMk(ns, name, *args, **kw):
-    dev_path = nsGet(ns, "/config/dev/path", "/dev")
+    dev_path = kw.get("target", None)
+    if dev_path is None:
+        dev_path = nsGet(ns, "/config/dev/path", "/dev")
     _path = "{}/{}".format(dev_path, name)
     _t = nsGet(ns, "/templates/{}".format(name))
     ctx = nsMkdir(ns, _path)
