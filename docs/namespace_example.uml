@@ -1,0 +1,45 @@
+@startuml
+object root
+object bin
+object sbin
+object etc
+object config
+object sys
+object f
+object F
+object V
+object var.redefine
+object path
+object corens
+object dev
+object queue
+object open
+object q
+object version
+object args
+object argv
+object scheduler
+object console
+
+root -- bin
+root -- sbin
+root -- etc
+root -- config
+root -- sys
+root -- dev
+bin -- f
+bin -- F
+bin -- V
+config -- var.redefine
+config -- path
+etc -- corens
+etc -- args
+etc -- argv
+dev -- q
+dev -- queue
+queue -- open
+corens -- version
+sys -- scheduler
+sys -- console
+
+@enduml

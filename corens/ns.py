@@ -23,6 +23,8 @@ def NS(**kw):
     nsMkdir(ns, "/scripts")
     nsMkdir(ns, "/templates")
     nsMkdir(ns, "/home")
+    nsMkdir(ns, "/usr")
+    nsMkdir(ns, "/usr/local")
     nsMkdir(ns, "/usr/local/bin")
     nsMkdir(ns, "/dev")
     nsSet(ns, "/sys/error", False)

@@ -1,4 +1,5 @@
 from fs.opener import open_fs
+from fs.errors import CreateFailed
 from corens.ns import *
 from corens.cfg_grammar import nsCfgGrammar
 from corens.version import *
@@ -24,8 +25,14 @@ def nsDefaults(ns):
     nsSet(ns, "/etc/corens/license", LICENSE)
     nsSet(ns, "/etc/version", "0.0")
     nsSet(ns, "/etc/release", "0.0.0")
-
+    nsSet(ns, "/etc/author", "Unknown")
+    nsSet(ns, "/etc/author.email", "Unknown@Example.com")
+    nsSet(ns, "/etc/license", "GPL3")
+    nsSet(ns, "/etc/url", "http://www.example.com")
     for c in nsGet(ns, "/config/cfg.path"):
-        nsGet(ns, "/config/cfg.fs").append(open_fs(c))
+        try:
+            nsGet(ns, "/config/cfg.fs").append(open_fs(c))
+        except CreateFailed:
+            continue
     ns = nsCfgGrammar(ns)
     return ns
