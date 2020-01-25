@@ -8,6 +8,7 @@ from corens.arrghs import *
 from corens.help import *
 from corens.console import *
 from corens.version import nsVersion, nsRelease
+from corens.vns import *
 
 
 def n(ns):
@@ -41,4 +42,5 @@ _lib = {
     '/sbin/consoleprocessor': nsConsoleProcess,
     '/sbin/corens_version': nsVersion,
     '/sbin/corens_release': nsRelease,
+    '/sbin/vnsinit': nsVNSinit,
 }
