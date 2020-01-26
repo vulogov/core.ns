@@ -14,6 +14,7 @@ def NS(**kw):
     nsMkdir(ns, "/sys/log/channels")
     nsMkdir(ns, "/config")
     nsMkdir(ns, "/etc")
+    nsMkdir(ns, "/etc/init.d")
     nsMkdir(ns, "/etc/args")
     nsMkdir(ns, "/help")
     nsMkdir(ns, "/help/cmd")

@@ -4,7 +4,7 @@ from apscheduler.schedulers.gevent import GeventScheduler
 from corens.ns import *
 from corens.tpl import nsMk
 
-def nsGevent(ns):
+def nsGevent(ns, *args, **kw):
     nsMkdir(ns, "/proc")
     nsSet(ns, "/sys/greenlets", [])
     nsSet(ns, "/sys/scheduler", GeventScheduler())

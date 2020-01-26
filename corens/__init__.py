@@ -22,7 +22,8 @@ def NS(*args, **kw):
     if cargs is None:
         cargs = sys.argv[1:]
     _f(ns, "/bin/args")(cargs)
-    _f(ns, "/bin/gevent")()
-    _f(ns, "/sbin/vnsinit")()
-    _f(ns, "/bin/cmd")
+    _f(ns, "/bin/gevent")(*args, **kw)
+    _f(ns, "/sbin/vnsinit")(*args, **kw)
+    _f(ns, "/sbin/init")(*args, **kw)
+    _f(ns, "/bin/cmd")(*args, **kw)
     return (ns, partial(_f, ns), partial(_F, ns))

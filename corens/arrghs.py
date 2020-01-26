@@ -56,5 +56,9 @@ def nsCmd(ns, *args, **kw):
     out = None
     for k in argv:
         _args = tuple([out,] + list(args))
-        out = f(ns, "{}/{}".format(root, k))(*_args, **kw)
+        try:
+            out = f(ns, "{}/{}".format(root, k))(*_args, **kw)
+        except TypeError:
+            nsGlobalError(ns, "Command {}/{} not found".format(root, k))
+            continue
     return ns

@@ -9,6 +9,7 @@ from corens.help import *
 from corens.console import *
 from corens.version import nsVersion, nsRelease
 from corens.vns import *
+from corens.init import *
 
 
 def n(ns):
@@ -43,4 +44,5 @@ _lib = {
     '/sbin/corens_version': nsVersion,
     '/sbin/corens_release': nsRelease,
     '/sbin/vnsinit': nsVNSinit,
+    '/sbin/init': nsInit,
 }
