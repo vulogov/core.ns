@@ -41,7 +41,7 @@ def nsVopen(ns, name, path=':mem:', **kw):
         dev_path = nsGet(ns, "/config/dev/path", "/dev")
     _path = "{}/volumes/{}".format(dev_path, name)
     if nsGet(ns, "{}/id".format(_path)) is not None:
-        return False
+        return (False, None)
     if path != ':mem:':
         path = os.path.abspath(path)
         if not os.path.exists(path) or not os.path.isfile(path):
@@ -54,7 +54,7 @@ def nsVopen(ns, name, path=':mem:', **kw):
     nsSet(ns, "{}/path".format(_path), path)
     nsSet(ns, "{}/set".format(_path), partial(nsVset, ns, ctx))
     nsSet(ns, "{}/get".format(_path), partial(nsVget, ns, ctx))
-    return True
+    return (True, _path)
 
 def nsVmkfs(ns, name, path, *patt):
     path = os.path.abspath(path)
@@ -72,14 +72,30 @@ def nsVmkfs(ns, name, path, *patt):
     return True
 
 def nsVdiskmount(ns, *args, **kw):
+    fstab = nsGet(ns, "/etc/fstab")
+    fs = nsGet(ns, "/etc/fs")
+    for f in fstab:
+        if fstab[f] != 'disk':
+            continue
+        path = fstab[f].get('path', None)
+        if path is None:
+            continue
+        res, _path = nsVopen(ns, f, path, **kw)
+        if res is not True:
+            continue
+        v = V(ns, "{}/image".format(_path))
+        patt = v.Set('/.mapping')
+        for p in patt:
+            fs[p] = _path
     return True
 
 def nsVdiskunmount(ns, *args, **kw):
     return True
 
 _lib = {
-    '/bin/mkfs.disk': nsVmkfs,
-    '/bin/mount.disk': nsVopen
+    '/sbin/mkfs.disk': nsVmkfs,
+    '/sbin/mount.disk': nsVopen,
+    '/sbin/remount.disk': nsVdiskmount,
 }
 
 _tpl = {

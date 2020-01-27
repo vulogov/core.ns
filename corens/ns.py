@@ -1,5 +1,6 @@
 import time
 import uuid
+import fnmatch
 from  gevent import queue
 import fnmatch
 from dpath.util import get as dget
@@ -14,6 +15,7 @@ def NS(**kw):
     nsMkdir(ns, "/sys/log/channels")
     nsMkdir(ns, "/config")
     nsMkdir(ns, "/etc")
+    nsSet(ns, "/etc/fs", {})
     nsMkdir(ns, "/etc/init.d")
     nsMkdir(ns, "/etc/args")
     nsMkdir(ns, "/help")
@@ -83,8 +85,18 @@ def nsSet(ns, key, val):
 def V(ns, name, val=None):
     if name[0] != "/":
         name = "/home/{}".format(name)
+    fs = nsGet(ns, "/etc/fs")
+    path = None
+    for p in fs:
+        if fnmatch.fnmatch(name, p) is True:
+            path = fs[p]
+            break
     if val is None:
+        if path is not None:
+            return V(ns, "{}/get".format(path))()
         return nsGet(ns, name)
     else:
+        if path is not None:
+            return V(ns, "{}/set".format(path))(val)
         ns =  nsSet(ns, name, val)
         return nsGet(ns, name)

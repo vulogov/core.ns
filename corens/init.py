@@ -17,6 +17,8 @@ def nsInit(ns, *args, **kw):
         if matchInitName(i) is True:
             nsMk(ns, i, *args, **kw)
     initd = nsLs(ns, "/etc/init.d")
-    for i in initd:
+    _cmds = list(initd.keys())
+    _cmds.sort()
+    for i in _cmds:
         f(ns, "/etc/init.d/{}/start".format(i))(*args, **kw)
     return True
