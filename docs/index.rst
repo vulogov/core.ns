@@ -1,4 +1,3 @@
-.. quickstart:
 **core.NS** - Application Framework for Python with a Unix as its grandfather.
 ==============================================================================
 
