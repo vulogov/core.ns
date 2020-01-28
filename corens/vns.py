@@ -3,7 +3,6 @@ from corens.tpl import nsMk
 
 def nsVNSinit(ns, *args, **kw):
     nsSet(ns, "/etc/fstab", {})
-    nsSet(ns, "/etc/fs", {})
     nsMk(ns, "disk")
     return ns
 
