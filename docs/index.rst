@@ -21,19 +21,19 @@ What is the place of the **core.NS** in the landscape of the Python packages
 
 **core.NS** is an *"Application Framework"*, means that is the tool for creating applications. And its have everything you need to do that:
 
- # functions and data access primitives
+# functions and data access primitives
 
- # low-level functionality is separated from your application code with help of *drivers*
+# low-level functionality is separated from your application code with help of *drivers*
 
- # command-line arguments parsing. You do not have to create parser. The one already provided for you. Just define help texts and functions.
+# command-line arguments parsing. You do not have to create parser. The one already provided for you. Just define help texts and functions.
 
- # Startup and Shutdown functions. You just have to define the functions. All logic of the startup and shutdown execution is provided.
+# Startup and Shutdown functions. You just have to define the functions. All logic of the startup and shutdown execution is provided.
 
- # "Smart" console
+# "Smart" console
 
- # "Smart" log subsystem
+# "Smart" log subsystem
 
- # Support for cooperative multitasking via `gevent <http://gevent.org>`_
+# Support for cooperative multitasking via `gevent <http://gevent.org>`_
 
 .. toctree::
   :caption: Current core.NS documentation
