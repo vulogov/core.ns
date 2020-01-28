@@ -6,7 +6,9 @@
 
 There are many Python Application Frameworks and when I am to introduce you another one, called core.NS.
 
-.. .. toctree::
+.. toctree::
   :maxdepth: 2
+  :glob:
+  
   whatsnew
   manpages
