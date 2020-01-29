@@ -41,6 +41,7 @@ What is the place of the **core.NS** in the landscape of the Python packages
   :maxdepth: 2
   :glob:
 
+  1-st
   namespace
   functions
   whatsnew/*
