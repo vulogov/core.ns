@@ -15,6 +15,8 @@ As we already know, the very first steps in **core.NS** is initialization of the
   >>> from corens  import *
   >>> ns, f, F = NS()
   >>> V = f("V")
+  >>> V("/config/answer")
+  42
 
 * On line 4, we are importing a basic functionality of the **core.NS**.     Usually, that is all that you will need.
 * On line 5, we are creating new Namespace. This call returns three elements:
