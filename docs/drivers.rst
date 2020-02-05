@@ -36,6 +36,7 @@ Unlike in previous examples, in low-level implementations, I am recommending to 
 After that, wrap it in *_tpl = {}* section of the module that you are adding to your **core.NS**.
 
 .. code-block:: python
+
 	_tpl = {
 			'counters': {
 					'create': _counter_open,
