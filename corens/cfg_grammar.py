@@ -6,7 +6,7 @@ from textx import metamodel_from_str
 import textx.exceptions
 
 BUND_GRAMMAR = """
-Model: i*=ImportDef n*=NameSpaceDef;
+Model: s*=ScriptDef i*=ImportDef n*=NameSpaceDef;
 
 NameSpaceDef:
     "[" name=NSID ">"
@@ -17,6 +17,10 @@ NameSpaceDef:
 
 ImportDef:
     "(" name=STRING ">"
+;
+
+ScriptDef:
+    words *= ScriptElements
 ;
 
 AssignmentDef:
@@ -63,6 +67,10 @@ DICT_TYPE:
 
 DataDef:
     ID | BASETYPE | LIST_TYPE | DICT_TYPE
+;
+
+ScriptDef:
+    NSID | NameDef | DataDef
 ;
 
 Comment:
