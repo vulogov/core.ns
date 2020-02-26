@@ -41,7 +41,16 @@ def _nsImport(ns, module):
                 nsTemplate(ns, m, **_tpl[m])
     return ns
 
-def f(ns, name):
+def f(ns, *n):
+    out = []
+    for _n in n:
+        out.append(fN(ns, _n))
+    if len(out) == 1:
+        return out[0]
+    else:
+        return (*out,)
+
+def fN(ns, name):
     if name[0] == "/":
         fun = nsGet(ns, name, None)
         if fun is None:
