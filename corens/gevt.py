@@ -1,8 +1,19 @@
 import gevent
+import sys
 import time
 from apscheduler.schedulers.gevent import GeventScheduler
 from corens.ns import *
+from corens.mod import f
 from corens.tpl import nsMk
+
+def nsGInput(ns):
+    prompt = nsGet(ns, "/etc/shell.prompt")
+    sys.stdout.write(prompt)
+    sys.stdout.flush()
+    gevent.select.select([sys.stdin], [], [])
+    return sys.stdin.readline().strip()
+
+
 
 def nsGevent(ns, *args, **kw):
     nsMkdir(ns, "/proc")
@@ -14,6 +25,7 @@ def nsGevent(ns, *args, **kw):
     glist = nsGet(ns, "/sys/greenlets")
     glist.append(g)
     nsMk(ns, "queue")
+    f(ns, "/dev/queue/open")("shell")
     return ns
 
 def nsProcAlloc(ns, name, g, **kw):
@@ -33,4 +45,7 @@ def nsSpawn(ns, name, fun, *args, **kw):
     glist = nsGet(ns, "/sys/greenlets")
     glist.append(g)
     g.start()
+    return ns
+
+def nsKillAll(ns):
     return ns

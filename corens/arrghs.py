@@ -54,10 +54,14 @@ def nsCmd(ns, *args, **kw):
     root = nsGet(ns, "/config/cmd.path")
     kw.update(nsGet(ns, "/config/cmd.kw"))
     out = None
+    is_cmd_run = nsGet(ns, "/config/cmd.run")
+    if is_cmd_run is True:
+        return ns
     for k in argv:
         _args = tuple([out,] + list(args))
         try:
             out = f(ns, "{}/{}".format(root, k))(*_args, **kw)
+            nsSet(ns, "/config/cmd.run", True)
         except TypeError:
             nsGlobalError(ns, "Command {}/{} not found".format(root, k))
             continue

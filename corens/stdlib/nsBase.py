@@ -45,4 +45,5 @@ _lib = {
     '/sbin/corens_release': nsRelease,
     '/sbin/vnsinit': nsVNSinit,
     '/sbin/init': nsInit,
+    '/bin/main': nsDummyMain,
 }

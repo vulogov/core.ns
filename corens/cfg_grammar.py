@@ -51,6 +51,35 @@ ReverseDataAssignmentOp:
     "->" | "as"
 ;
 
+REF_TYPE:
+    "`" data=DataDef
+;
+
+LAMBDA_TYPE:
+    "(" words*= DataDef ")"
+;
+
+CURRY_TYPE:
+    "(" name=CODEWORD_REF_TYPE "." value=DataDef ")"
+;
+
+CODEWORD_REF_TYPE:
+    ID | NSID |  LAMBDA_TYPE | CURRY_TYPE | SPECIAL_TYPE
+;
+
+DO_EXECUTE_TYPE:
+    ";"
+;
+
+PRELIMENARY_EXECUTE_TYPE:
+    ":" name=CODEWORD_REF_TYPE
+;
+
+
+
+SPECIAL_TYPE:
+    /[+*<>=!?%^]+/
+;
 
 LIST_TYPE:
     "[" data *= DataDef[","] "]"
@@ -66,7 +95,7 @@ DICT_TYPE:
 
 
 DataDef:
-    ID | BASETYPE | LIST_TYPE | DICT_TYPE
+    ID | BASETYPE | LIST_TYPE | DICT_TYPE | REF_TYPE | LAMBDA_TYPE | CURRY_TYPE | PRELIMENARY_EXECUTE_TYPE | DO_EXECUTE_TYPE | NSID | SPECIAL_TYPE
 ;
 
 ScriptDef:
@@ -79,7 +108,7 @@ Comment:
 """
 
 def nsCfgGrammar(ns):
-    bund_mm = metamodel_from_str(BUND_GRAMMAR, memoization=True)
+    bund_mm = metamodel_from_str(BUND_GRAMMAR, memoization=True, )
     V(ns, "/sys/metamodel", bund_mm)
     return ns
 

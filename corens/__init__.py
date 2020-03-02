@@ -26,4 +26,6 @@ def NS(*args, **kw):
     _f(ns, "/sbin/vnsinit")(*args, **kw)
     _f(ns, "/sbin/init")(*args, **kw)
     _f(ns, "/bin/cmd")(*args, **kw)
+    if nsGet(ns, "/config/cmd.run") is False:
+            _f(ns, "/bin/main")(*args, **kw)
     return (ns, partial(_f, ns), partial(_F, ns))

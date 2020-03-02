@@ -1,4 +1,5 @@
 import re
+import sys
 from corens.ns import *
 from corens.tpl import *
 from corens.mod import f
@@ -22,3 +23,6 @@ def nsInit(ns, *args, **kw):
     for i in _cmds:
         f(ns, "/etc/init.d/{}/start".format(i))(*args, **kw)
     return True
+
+def nsDummyMain(ns, *args, **kw):
+    return ns

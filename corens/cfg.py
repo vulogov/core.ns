@@ -6,6 +6,7 @@ from corens.version import *
 
 def nsDefaults(ns):
     nsSet(ns, "/config/var.redefine", True)
+    nsSet(ns, "/config/cmd.run", False)
     nsSet(ns, "/config/path", ["/home", "/bin", "/sbin"])
     nsSet(ns, "/config/dev.path", "/dev")
     nsSet(ns, "/config/cfg.path", ['osfs://.','osfs://tests'])
@@ -29,6 +30,7 @@ def nsDefaults(ns):
     nsSet(ns, "/etc/author.email", "Unknown@Example.com")
     nsSet(ns, "/etc/license", "GPL3")
     nsSet(ns, "/etc/url", "http://www.example.com")
+    nsSet(ns, "/etc/shell.prompt", " #  ")
     for c in nsGet(ns, "/config/cfg.path"):
         try:
             nsGet(ns, "/config/cfg.fs").append(open_fs(c))
