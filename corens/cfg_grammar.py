@@ -99,7 +99,7 @@ DataDef:
 ;
 
 ScriptDef:
-    NSID | NameDef | DataDef
+    DataDef
 ;
 
 Comment:
