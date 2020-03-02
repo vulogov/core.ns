@@ -54,3 +54,9 @@ def test_cfg_6():
     C = f("C")
     C('[ /home > [1, 3.14, "Hello"] -> List ;;' )
     assert len(V('/home/List')) == 3
+
+def test_cfg_7():
+    ns, f, F = NS()
+    V = f("V")
+    C = f("C")
+    C('[ /home > Answer <- ( 41 1 + ) ;;' )

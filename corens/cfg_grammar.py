@@ -56,7 +56,7 @@ REF_TYPE:
 ;
 
 LAMBDA_TYPE:
-    "(" words*= DataDef ")"
+    "(" words+= DataDef ")"
 ;
 
 CURRY_TYPE:
