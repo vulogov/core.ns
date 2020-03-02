@@ -60,3 +60,9 @@ def test_cfg_7():
     V = f("V")
     C = f("C")
     C('[ /home > Answer <- ( 41 1 + ) ;;' )
+
+def test_cfg_8():
+    ns, f, F = NS()
+    V = f("V")
+    C = f("C")
+    C('41 1 +' )
