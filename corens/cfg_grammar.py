@@ -78,7 +78,7 @@ PRELIMENARY_EXECUTE_TYPE:
 
 
 SPECIAL_TYPE:
-    /[+*<>=!?%^]+/
+    /[-+*<>=!?%^~]+/
 ;
 
 LIST_TYPE:
