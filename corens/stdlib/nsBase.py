@@ -10,7 +10,7 @@ from corens.console import *
 from corens.version import nsVersion, nsRelease
 from corens.vns import *
 from corens.init import *
-from corens.hylang import nsHYInit, nsHyEval, nsHyPipeline
+from corens.hylang import nsHYInit, nsHyEval, nsHyPipeline, nsHyStartup
 
 
 def n(ns):
@@ -26,7 +26,8 @@ _lib = {
     '/bin/I': I,
     '/bin/f': f,
     '/bin/hy': nsHyEval,
-    '/bin/h|': nsHyPipeline, 
+    '/bin/h|': nsHyPipeline,
+    '/sbin/hy.startup': nsHyStartup,
     '/bin/import': nsImport,
     '/bin/T': nsTemplate,
     '/bin/Mk': nsMk,

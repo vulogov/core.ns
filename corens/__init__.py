@@ -29,4 +29,5 @@ def NS(*args, **kw):
     _f(ns, "/bin/cmd")(*args, **kw)
     if nsGet(ns, "/config/cmd.run") is False:
             _f(ns, "/bin/main")(*args, **kw)
+    _f(ns, "/sbin/hy.startup")(*args, **kw)
     return (ns, partial(_f, ns), partial(_F, ns))
