@@ -1,4 +1,4 @@
-from corens.gevt import nsGInputpytho
+from corens.gevt import nsGInputpython
 from corens.ns import *
 
 def nsGShell(ns):

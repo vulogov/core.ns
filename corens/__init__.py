@@ -24,6 +24,7 @@ def NS(*args, **kw):
     _f(ns, "/bin/args")(cargs)
     _f(ns, "/bin/gevent")(*args, **kw)
     _f(ns, "/sbin/vnsinit")(*args, **kw)
+    _f(ns, "/sbin/hyinit")(*args, **kw)
     _f(ns, "/sbin/init")(*args, **kw)
     _f(ns, "/bin/cmd")(*args, **kw)
     if nsGet(ns, "/config/cmd.run") is False:

@@ -1,5 +1,5 @@
 from corens.ns import *
-from corens.mod import I, nsImport
+from corens.mod import I, nsImport, f
 from corens.tpl import nsTemplate, nsMk
 from corens.cfg_grammar import nsCfgFSLoad
 from corens.cfg_grammar import nsCfgLoad
@@ -10,6 +10,7 @@ from corens.console import *
 from corens.version import nsVersion, nsRelease
 from corens.vns import *
 from corens.init import *
+from corens.hylang import nsHYInit, nsHyEval
 
 
 def n(ns):
@@ -23,6 +24,8 @@ _lib = {
     '/bin/ns': n,
     '/bin/V': V,
     '/bin/I': I,
+    '/bin/f': f,
+    '/bin/hy': nsHyEval,
     '/bin/import': nsImport,
     '/bin/T': nsTemplate,
     '/bin/Mk': nsMk,
@@ -44,6 +47,7 @@ _lib = {
     '/sbin/corens_version': nsVersion,
     '/sbin/corens_release': nsRelease,
     '/sbin/vnsinit': nsVNSinit,
+    '/sbin/hyinit': nsHYInit,
     '/sbin/init': nsInit,
     '/bin/main': nsDummyMain,
 }
