@@ -10,3 +10,12 @@ def test_hy_1():
     ns, f, F = NS()
     V = f("V")
     assert V("/sys/hylang.enabled") == True
+
+def test_hy_2():
+    ns, f, F = NS()
+    hy = f("hy")
+    assert hy("(+ 41 1)") == 42
+
+def test_hy_3():
+    ns, f, F = NS()
+    assert f("h|")("1 (+ 41)") == 42

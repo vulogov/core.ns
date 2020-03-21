@@ -32,3 +32,8 @@ def nsHyEval(ns, expression):
         nsGlobalError(ns, "{}".format(e))
         return None
     return _res
+
+def nsHyPipeline(ns, expression):
+    _exp = u"""(->
+    {})""".format(expression)
+    return nsHyEval(ns, _exp)
