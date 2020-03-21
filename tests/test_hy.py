@@ -19,3 +19,8 @@ def test_hy_2():
 def test_hy_3():
     ns, f, F = NS()
     assert f("h|")("1 (+ 41)") == 42
+
+def test_hy_4():
+    ns, f, F = NS()
+    f("/dev/q/hy/put")(42)
+    assert f("/dev/q/hy/get")() == 42

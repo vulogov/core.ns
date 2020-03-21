@@ -1,5 +1,4 @@
 import fnmatch
-from corens.mod import f
 from corens.ns import nsMkdir, nsSet, nsGet, nsGlobalError, nsLs
 from hy import read_str, eval
 
@@ -26,6 +25,7 @@ def nsHYInit(ns, *args, **kw):
     nsSet(ns, "/sys/hylang.enabled", False)
     nsHyEval(ns, '(nsSet ns "/sys/hylang.enabled" True)')
     nsHyEval(ns, '(nsSet ns "/sys/hylang.enabled.stamp" ((f "stamp")))')
+    nsGet(ns, "/dev/queue/open")("hy")
 
 
 def nsHyEval(ns, expression):
