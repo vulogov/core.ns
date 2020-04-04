@@ -35,3 +35,24 @@ def test_mod_6():
     ns, f, F = NS()
     Random = f("random")
     assert len(Random()) == 1
+
+def answer(ns):
+    f = lf(ns)
+    V = f("V")
+    V("/tmp/answer", 42)
+    return 42
+
+def test_mod_7():
+    ns, f, F = NS()
+    I = f("I")
+    I("/home/answer", answer)
+    res = f("/home/answer")()
+    assert res == 42
+
+def test_mod_8():
+    ns, f, F = NS()
+    I = f("I")
+    I("/home/answer", answer)
+    res = f("/home/answer")()
+    V = f("V")
+    assert V("/tmp/answer") == 42

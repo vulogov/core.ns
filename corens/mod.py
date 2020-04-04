@@ -72,3 +72,7 @@ def F(ns, *funcs):
             continue
         setattr(builtins, os.path.basename(_f), _nf)
     return ns
+
+def lf(ns):
+    f = nsGet(ns, "/bin/f")
+    return f
