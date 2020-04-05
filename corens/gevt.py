@@ -18,6 +18,7 @@ def nsGInput(ns):
 def nsGevent(ns, *args, **kw):
     nsMkdir(ns, "/proc")
     nsSet(ns, "/sys/greenlets", [])
+    nsSet(ns, "/sys/greenlets.user", [])
     nsSet(ns, "/sys/scheduler", GeventScheduler())
     s = nsGet(ns, "/sys/scheduler")
     g = s.start()
@@ -39,13 +40,34 @@ def nsProcAlloc(ns, name, g, **kw):
 
 def nsSpawn(ns, name, fun, *args, **kw):
     _args = tuple([ns,] + list(args))
-    g = gevent.Greenlet(fun, args, kw)
+    g = gevent.Greenlet.spawn(fun, *_args, **kw)
+    g.name = name
+    nsProcAlloc(ns, name, g)
+    glist = nsGet(ns, "/sys/greenlets.user")
+    glist.append(g)
+    g.start()
+    return ns
+
+def nsDaemon(ns, name, fun, *args, **kw):
+    _args = tuple([ns,] + list(args))
+    g = gevent.Greenlet.spawn(fun, *_args, **kw)
     g.name = name
     nsProcAlloc(ns, name, g)
     glist = nsGet(ns, "/sys/greenlets")
     glist.append(g)
     g.start()
     return ns
+
+def _ns_greenlet_loop(ns, path):
+    glist = nsGet(ns, path)
+    gevent.joinall(glist)
+
+def nsLoopUser(ns):
+    return _ns_greenlet_loop(ns, "/sys/greenlets.user")
+
+def nsLoopSys(ns):
+    return _ns_greenlet_loop(ns, "/sys/greenlets")
+
 
 def nsKillAll(ns):
     return ns

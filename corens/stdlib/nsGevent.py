@@ -31,7 +31,10 @@ def _queue_get(ns, ctx, _queue):
 
 _lib = {
     '/bin/gevent': nsGevent,
-    '/bin/spawn': nsSpawn
+    '/bin/spawn': nsSpawn,
+    '/bin/daemon': nsDaemon,
+    '/bin/loop': nsLoopUser,
+    '/sbin/loop': nsLoopSys
 }
 
 _tpl = {
