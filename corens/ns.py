@@ -1,3 +1,4 @@
+import sys
 import time
 import uuid
 import fnmatch
@@ -100,3 +101,6 @@ def V(ns, name, val=None):
             return V(ns, "{}/set".format(path))(val)
         ns =  nsSet(ns, name, val)
         return nsGet(ns, name)
+
+def nsMemory(ns):
+    return sys.getsizeof(ns)

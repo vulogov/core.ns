@@ -5,6 +5,7 @@ import getpass
 import shutil
 import stat
 import fnmatch
+import socket
 from pathlib import Path
 from corens.ns import nsSet, nsGet, nsMkdir
 from corens.mod import I
@@ -74,6 +75,8 @@ def nsEnvInit(ns, *args, **kw):
     nsSet(ns, "/sys/env/home.disk.used", home_used)
     nsSet(ns, "/sys/env/home.disk.free", home_free)
     nsSet(ns, "/sys/env/home.disk.free.percent", (home_free/home_total)*100)
+    nsSet(ns, "/sys/env/ip.addr", socket.gethostbyname(socket.gethostname()))
+    nsSet(ns, "/sys/env/ip.addr.list", socket.gethostbyname_ex(socket.gethostname())[2])
     nsEnvLoadLocalBS(ns)
     for k in kw:
         _k = "/"+k[4:].replace("_", "/")

@@ -19,6 +19,7 @@ def n(ns):
 
 _lib = {
     '/bin/mkdir': nsMkdir,
+    '/bin/memory': nsMemory, 
     '/bin/get': nsGet,
     '/bin/set': nsSet,
     '/bin/ls': nsLs,
