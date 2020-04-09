@@ -85,3 +85,8 @@ def test_cfg_11():
     ns, f, F = NS(__C_1=cfg)
     V = f("V")
     assert V('/home/Answer') == 42
+
+def test_cfg_12():
+    ns, f, F = NS(__B_1="test.cfg")
+    V = f("V")
+    assert V('/home/NotAnswer') == 41
