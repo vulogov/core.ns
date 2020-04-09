@@ -1,6 +1,7 @@
 import sys
 import re
 import clint
+import os.path
 from corens.ns import *
 from corens.help import *
 from corens.mod import f
