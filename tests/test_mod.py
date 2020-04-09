@@ -61,3 +61,10 @@ def test_mod_9():
     ns, f, F = NS(**{"__V_config_user.library":['corens.testlib']})
     V = f("V")
     assert V("/home/a") == 42
+
+def the_answer(ns):
+    return 42
+
+def test_mod_10():
+    ns, f, F = NS(**{"__F_home_theanswer":the_answer})
+    assert f("/home/theanswer")() == 42

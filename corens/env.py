@@ -7,6 +7,7 @@ import stat
 import fnmatch
 from pathlib import Path
 from corens.ns import nsSet, nsGet, nsMkdir
+from corens.mod import I
 
 def nsEnvVars(ns):
     for e in os.environ:
@@ -74,6 +75,13 @@ def nsEnvInit(ns, *args, **kw):
     nsSet(ns, "/sys/env/home.disk.free.percent", (home_free/home_total)*100)
     nsEnvLoadLocalBS(ns)
     for k in kw:
+        _k = "/"+k[4:].replace("_", "/")
         if fnmatch.fnmatch(k, "__V_*") is True:
             _k = "/"+k[4:].replace("_", "/")
             nsSet(ns, _k, kw[k])
+        elif fnmatch.fnmatch(k, "__F_*") is True:
+            dir = os.path.dirname(_k)
+            nsMkdir(ns, dir)
+            I(ns, _k, kw[k])
+        else:
+            pass
