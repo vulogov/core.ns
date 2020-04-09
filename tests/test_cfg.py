@@ -72,3 +72,8 @@ def test_cfg_9():
     V = f("V")
     C = f("C")
     C('~ += === =**= ~+ ~- ~*' )
+
+def test_cfg_10():
+    ns, f, F = NS(__V_home_a=42)
+    V = f("V")
+    assert V("/home/a") == 42

@@ -17,15 +17,14 @@ def NS(*args, **kw):
     ns = _NS()
     ns = nsDefaults(ns)
     ns = nsImport(ns, nsGet(ns, "/config/library"))
+    cargs = kw.get('args', sys.argv[1:])
+    _f(ns, "/bin/args")(cargs)
     _f(ns, "/sbin/envinit")(*args, **kw)
     for c in nsGet(ns, "/config/cfg.files"):
         _f(ns, "/bin/Cfg")(c)
     ns = nsImport(ns, nsGet(ns, "/config/user.library"))
-    cargs = kw.get('args', None)
-    if cargs is None:
-        cargs = sys.argv[1:]
-    _f(ns, "/bin/args")(cargs)
     _f(ns, "/bin/gevent")(*args, **kw)
+    _f(ns, "/sbin/network_init")(*args, **kw)
     _f(ns, "/sbin/vnsinit")(*args, **kw)
     _f(ns, "/sbin/hyinit")(*args, **kw)
     _f(ns, "/sbin/init")(*args, **kw)

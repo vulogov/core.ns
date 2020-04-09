@@ -56,3 +56,8 @@ def test_mod_8():
     res = f("/home/answer")()
     V = f("V")
     assert V("/tmp/answer") == 42
+
+def test_mod_9():
+    ns, f, F = NS(**{"__V_config_user.library":['corens.testlib']})
+    V = f("V")
+    assert V("/home/a") == 42

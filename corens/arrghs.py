@@ -6,8 +6,10 @@ from corens.help import *
 from corens.mod import f
 
 def nsArgs(ns, args=sys.argv[1:]):
+    name = sys.argv[0]
     path = "/etc/args"
     nsSet(ns, "/etc/argv", [])
+    nsSet(ns, "/etc/name", name)
     argv = nsGet(ns, "/etc/argv")
     _args = nsGet(ns, path)
     args = clint.arguments.Args(args, True)
@@ -47,6 +49,7 @@ def nsArgs(ns, args=sys.argv[1:]):
             _path = "{}/{}".format(path, a)
             nsMkdir(ns, _path)
             continue
+    nsSet(ns, "/etc/name", nsGet(ns, "/etc/args/default/appname", name))
     return ns
 
 def nsCmd(ns, *args, **kw):
