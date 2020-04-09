@@ -6,7 +6,7 @@ from corens.help import *
 from corens.mod import f
 
 def nsArgs(ns, args=sys.argv[1:]):
-    name = sys.argv[0]
+    name = os.path.basename(sys.argv[0])
     path = "/etc/args"
     nsSet(ns, "/etc/argv", [])
     nsSet(ns, "/etc/name", name)
