@@ -77,3 +77,11 @@ def test_cfg_10():
     ns, f, F = NS(__V_home_a=42)
     V = f("V")
     assert V("/home/a") == 42
+
+def test_cfg_11():
+    cfg="""
+    [ /home > Answer <- 42 ;;
+    """
+    ns, f, F = NS(__C_1=cfg)
+    V = f("V")
+    assert V('/home/Answer') == 42

@@ -8,6 +8,7 @@ import fnmatch
 from pathlib import Path
 from corens.ns import nsSet, nsGet, nsMkdir
 from corens.mod import I
+from corens.cfg_grammar import nsCfgLoad
 
 def nsEnvVars(ns):
     for e in os.environ:
@@ -83,5 +84,7 @@ def nsEnvInit(ns, *args, **kw):
             dir = os.path.dirname(_k)
             nsMkdir(ns, dir)
             I(ns, _k, kw[k])
+        elif fnmatch.fnmatch(k, "__C_*") is True:
+            nsCfgLoad(ns, kw[k])
         else:
             pass
