@@ -55,6 +55,7 @@ _lib = {
     '/sbin/hyinit': nsHYInit,
     '/sbin/envinit': nsEnvInit,
     '/sbin/init': nsInit,
+    '/sbin/stop': nsStop,
     '/bin/main': nsDummyMain,
     '/sbin/signalinit': nsSignalInit,
     '/sbin/signalsetup': nsSignalSetup,

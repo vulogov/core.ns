@@ -28,9 +28,9 @@ def NS(*args, **kw):
     _f(ns, "/sbin/network_init")(*args, **kw)
     _f(ns, "/sbin/vnsinit")(*args, **kw)
     _f(ns, "/sbin/hyinit")(*args, **kw)
-    _f(ns, "/sbin/init")(*args, **kw)
     _f(ns, "/sbin/hy.startup")(*args, **kw)
     _f(ns, "/sbin/signalsetup")(*args, **kw)
+    _f(ns, "/sbin/init")(*args, **kw)
     _f(ns, "/bin/cmd")(*args, **kw)
     if nsGet(ns, "/config/cmd.run") is False:
             _f(ns, "/bin/main")(*args, **kw)
