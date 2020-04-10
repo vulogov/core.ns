@@ -27,12 +27,27 @@ def _nsImport(ns, module):
             _lib = getattr(_module, '_lib')
         except AttributeError:
             _lib = None
-            pass
         try:
             _tpl = getattr(_module, '_tpl')
         except AttributeError:
             _tpl = None
-            pass
+        try:
+            _init = getattr(_module, '_init')
+        except AttributeError:
+            _init = None
+        try:
+            _actions = getattr(_module, '_actions')
+        except AttributeError:
+            _actions = None
+        if _init is not None:
+            for i in _init:
+                nsMkdir("/etc/init.d/{}".format(i))
+        if _actions is not None:
+            for k in _actions:
+                path = "/etc/init.d/{}".format(k)
+                for j in _action[k]:
+                    _path = "{}/{}".format(path, j)
+                    nsSet(ns, _path, partial(_action[k][j], ns))
         if _lib is not None:
             for k in _lib:
                 nsSet(ns, k, partial(_lib[k], ns))

@@ -25,6 +25,10 @@ def nsConsoleProcess(ns, entries=1):
             break
         gevent.sleep(0.1)
 
+def nsConsoleDaemon(ns):
+    while True:
+        pass
+
 def nsConsoleSize(ns):
     q = nsGet(ns, "/sys/console")
     return q.qsize()

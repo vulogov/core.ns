@@ -14,23 +14,41 @@ def matchInitName(name):
         return True
     return False
 
+def nsInitExecuteFun(ns, path, action, *args, **kw):
+    patt = r"^{}(.*)*".format(action)
+    actions = nsLs(ns, path)
+    for a in actions:
+        if re.match(patt, a) is not None:
+            actions[a](*args, **kw)
+
+def nsInitExecuteHy(ns, path, action, *args, **kw):
+    patt = r"^{}Hy(.*)*".format(action)
+    actions = nsLs(ns, path)
+    for a in actions:
+        if re.match(patt, a) is not None:
+            nsHyEval(ns, actions[a])
+
+def nsInitExecutePipe(ns, path, action, *args, **kw):
+    patt = r"^{}Pipe(.*)*".format(action)
+    actions = nsLs(ns, path)
+    for a in actions:
+        if re.match(patt, a) is not None:
+            nsHyPipeline(ns, actions[a])
+
+
 def nsInitExecute(ns, action, *args, **kw):
     initd = nsLs(ns, "/etc/init.d")
     _cmds = list(initd.keys())
     _cmds.sort()
-    if re.match("^stop(.\w*)*", action) is not None:
+    if re.match(r"^stop(.*)*", action) is not None:
         _cmds.reverse()
     for i in _cmds:
-        fun = f(ns, "/etc/init.d/{}/{}".format(i, action))
-        if fun is None:
-            continue
-        fun(*args, **kw)
-        fun = f(ns, "V")("/etc/init.d/{}/{}Hy".format(i, action))
-        if fun is not None:
-            nsHyEval(ns, fun)
-        fun = f(ns, "V")("/etc/init.d/{}/{}Pipe".format(i, action))
-        if fun is not None:
-            nsHyPipeline(ns, fun)
+        path = "/etc/init.d/{}".format(i)
+        nsInitExecuteFun(ns, path, action, *args, **kw)
+        nsInitExecuteHy(ns, path, action, *args, **kw)
+        nsInitExecutePipe(ns, path, action, *args, **kw)
+
+
 
 def nsInit(ns, *args, **kw):
     tpls = nsLs(ns, "/templates")
