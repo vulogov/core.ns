@@ -7,7 +7,7 @@ def nsSignalAdd(ns, path, *handlers):
     for h in handlers:
         nsGet(ns, hpath).add(h)
 
-def nsSignalInit(ns, path, *handlers):
+def nsSignalAddInit(ns, path, *handlers):
     hpath = "{}/handlers".format(path)
     spath = "{}/signal".format(path)
     _handlers = nsGet(ns, hpath)
@@ -27,8 +27,7 @@ def nsSignalInit(ns, *args, **kw):
         nsSet(ns, "/sys/signals/{}/n".format(s.name), s.value)
         nsSet(ns, "/sys/signals/{}/handlers".format(s.name), set())
         nsSet(ns, "/sys/signals/{}/add".format(s.name), partial(nsSignalAdd, ns, _p))
-        nsSet(ns, "/sys/signals/{}/init".format(s.name), partial(nsSignalInit, ns, _p))
-
+        nsSet(ns, "/sys/signals/{}/init".format(s.name), partial(nsSignalAddInit, ns, _p))
     return
 
 def nsSignalSetup(ns, *args, **kw):

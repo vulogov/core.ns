@@ -22,6 +22,8 @@ def NS(**kw):
     nsMkdir(ns, "/help")
     nsMkdir(ns, "/help/cmd")
     nsMkdir(ns, "/bin")
+    nsMkdir(ns, "/bin/signals")
+    nsMkdir(ns, "/bin/atexit")
     nsMkdir(ns, "/sbin")
     nsMkdir(ns, "/tmp")
     nsMkdir(ns, "/scripts")

@@ -1,3 +1,5 @@
-import os
+from corens.env import nsEnvRemovePidSignal
 
-_lib = {}
+_lib = {
+    '/bin/signals/removepid': nsEnvRemovePidSignal,
+}

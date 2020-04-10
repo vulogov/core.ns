@@ -8,7 +8,7 @@ import fnmatch
 import socket
 from pathlib import Path
 from corens.ns import nsSet, nsGet, nsMkdir, nsGlobalError
-from corens.mod import I
+from corens.mod import I, lf
 from corens.cfg_grammar import nsCfgLoad, nsCfgFSLoad
 
 def nsEnvVars(ns):
@@ -24,6 +24,14 @@ def check_the_path(ns, path):
     if stat.S_IMODE(os.lstat(path).st_mode) != 448:
         return False
     return True
+
+def nsEnvRemovePidSignal(ns, sig, frame):
+    from corens.mod import lf
+    f = lf(ns)
+    V = f("V")
+    if os.path.exists(nsGet(ns, "/sys/env/pidFile")) and os.path.isfile(nsGet(ns, "/sys/env/pidFile")):
+        os.remove(nsGet(ns, "/sys/env/pidFile"))
+
 
 
 def nsEnvLoadLocalBS(ns):
@@ -65,6 +73,7 @@ def nsEnvLoadLocalBS(ns):
 
 
 def nsEnvInit(ns, *args, **kw):
+    f = lf(ns)
     nsMkdir(ns, "/sys/env")
     nsMkdir(ns, "/sys/env/variables")
     nsMkdir(ns, "/sys/env/platform")

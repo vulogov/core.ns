@@ -2,8 +2,9 @@ import gevent
 import sys
 import time
 from apscheduler.schedulers.gevent import GeventScheduler
+from toolz import partial
 from corens.ns import *
-from corens.mod import f
+from corens.mod import f, lf
 from corens.tpl import nsMk
 
 def nsGInput(ns):
@@ -13,14 +14,19 @@ def nsGInput(ns):
     gevent.select.select([sys.stdin], [], [])
     return sys.stdin.readline().strip()
 
-
+def nsGeventTick(ns):
+    f = lf(ns)
+    V = f("V")
+    V("/dev/time", time.time())
 
 def nsGevent(ns, *args, **kw):
     nsMkdir(ns, "/proc")
+    nsSet(ns, "/dev/time", time.time())
     nsSet(ns, "/sys/greenlets", [])
     nsSet(ns, "/sys/greenlets.user", [])
     nsSet(ns, "/sys/scheduler", GeventScheduler())
     s = nsGet(ns, "/sys/scheduler")
+    s.add_job(partial(nsGeventTick, ns), 'interval', seconds=1)
     g = s.start()
     ns = nsProcAlloc(ns, "scheduler", g, scheduler=s)
     glist = nsGet(ns, "/sys/greenlets")
@@ -60,7 +66,10 @@ def nsDaemon(ns, name, fun, *args, **kw):
 
 def _ns_greenlet_loop(ns, path):
     glist = nsGet(ns, path)
-    gevent.joinall(glist)
+    try:
+        gevent.joinall(glist)
+    except KeyboardInterrupt:
+        pass
 
 def nsLoopUser(ns):
     return _ns_greenlet_loop(ns, "/sys/greenlets.user")

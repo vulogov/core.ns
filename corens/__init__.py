@@ -19,8 +19,8 @@ def NS(*args, **kw):
     ns = nsImport(ns, nsGet(ns, "/config/library"))
     cargs = kw.get('args', sys.argv[1:])
     _f(ns, "/bin/args")(cargs)
-    _f(ns, "/sbin/envinit")(*args, **kw)
     _f(ns, "/sbin/signalinit")(*args, **kw)
+    _f(ns, "/sbin/envinit")(*args, **kw)
     for c in nsGet(ns, "/config/cfg.files"):
         _f(ns, "/bin/Cfg")(c)
     ns = nsImport(ns, nsGet(ns, "/config/user.library"))
