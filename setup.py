@@ -26,7 +26,7 @@ def nsRelease(ns):
 
 name="corens"
 version="0.0"
-release="0.0.3"
+release="0.0.5"
 author='Vladimir Ulogov'
 author_email='vladimir.ulogov@me.com'
 url='https://github.com/vulogov/core.ns'

@@ -25,3 +25,13 @@ def test_args_4():
     ns, f, F = NS(args=['a','b','--m', '--f', '42'])
     V = f("V")
     assert V('/etc/args/b/f') == '42'
+
+def test_args_5():
+    ns, f, F = NS(args=['+flag'])
+    V = f("V")
+    assert V('/etc/flags/flag') == True
+
+def test_args_6():
+    ns, f, F = NS(args=['-flag'])
+    V = f("V")
+    assert V('/etc/flags/flag') == False

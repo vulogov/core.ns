@@ -7,7 +7,7 @@ import stat
 import fnmatch
 import socket
 from pathlib import Path
-from corens.ns import nsSet, nsGet, nsMkdir
+from corens.ns import nsSet, nsGet, nsMkdir, nsGlobalError
 from corens.mod import I
 from corens.cfg_grammar import nsCfgLoad, nsCfgFSLoad
 
@@ -49,6 +49,16 @@ def nsEnvLoadLocalBS(ns):
     if check_the_path(ns, "/etc/{}".format(CNS_NAME)) is True:
         cfg_path.append("osfs:///etc/{}".format(CNS_NAME))
     nsSet(ns, "/config/cfg.path", cfg_path)
+    nsSet(ns, "/sys/env/pidFile", "{}/{}.pid".format(CNS_HOME, CNS_NAME))
+    pidExists = False
+    if os.path.exists(nsGet(ns, "/sys/env/pidFile")) and os.path.isfile(nsGet(ns, "/sys/env/pidFile")):
+        pidExists = True
+    if nsGet(ns, "/etc/singleCopy") is True and pidExists is True:
+        nsGlobalError(ns, "Application {} already running.".format(CNS_NAME))
+        raise SystemExit
+    nsSet(ns, "/sys/env/pidFileExists", pidExists)
+    with open(nsGet(ns, "/sys/env/pidFile"), "w") as f:
+        f.write(str(os.getpid()))
 
 
 
@@ -75,14 +85,20 @@ def nsEnvInit(ns, *args, **kw):
     nsSet(ns, "/sys/env/home.disk.used", home_used)
     nsSet(ns, "/sys/env/home.disk.free", home_free)
     nsSet(ns, "/sys/env/home.disk.free.percent", (home_free/home_total)*100)
-    nsSet(ns, "/sys/env/ip.addr", socket.gethostbyname(socket.gethostname()))
-    nsSet(ns, "/sys/env/ip.addr.list", socket.gethostbyname_ex(socket.gethostname())[2])
+    try:
+        nsSet(ns, "/sys/env/ip.addr", socket.gethostbyname(socket.gethostname()))
+        nsSet(ns, "/sys/env/ip.addr.list", socket.gethostbyname_ex(socket.gethostname())[2])
+    except socket.gaierror:
+        nsSet(ns, "/sys/env/ip.addr", '127.0.0.1')
+        nsSet(ns, "/sys/env/ip.addr.list", ['127.0.0.1'])
     nsEnvLoadLocalBS(ns)
     for k in kw:
         _k = "/"+k[4:].replace("_", "/")
         if fnmatch.fnmatch(k, "__V_*") is True:
             _k = "/"+k[4:].replace("_", "/")
             nsSet(ns, _k, kw[k])
+        if k[0] == "/":
+            nsSet(ns, k, kw[k])
         elif fnmatch.fnmatch(k, "__F_*") is True:
             dir = os.path.dirname(_k)
             nsMkdir(ns, dir)

@@ -19,6 +19,8 @@ def nsArgs(ns, args=sys.argv[1:]):
     args = clint.arguments.Args(args, True)
     _path = "{}/default".format(path)
     nsMkdir(ns, path)
+    nsMkdir(ns, _path)
+    nsMkdir(ns, '/etc/flags')
     isFlag = False
     prev = None
     while True:
@@ -34,6 +36,12 @@ def nsArgs(ns, args=sys.argv[1:]):
                 hpath = "/help/cmd/{}".format(prev)
             nsHelp(ns, hpath)
             raise SystemExit
+        if re.match(r'\+(.*)', a) is not None and isFlag is False:
+            nsSet(ns, "/etc/flags/{}".format(a[1:]), True)
+            continue
+        if re.match(r'\-(\w+)', a) is not None and isFlag is False:
+            nsSet(ns, "/etc/flags/{}".format(a[1:]), False)
+            continue
         if re.match(r'--(.*)', a) is not None and isFlag is False:
             isFlag = True
             prev = a[2:]
@@ -53,7 +61,10 @@ def nsArgs(ns, args=sys.argv[1:]):
             _path = "{}/{}".format(path, a)
             nsMkdir(ns, _path)
             continue
+
+
     nsSet(ns, "/etc/name", nsGet(ns, "/etc/args/default/appname", name))
+    nsSet(ns, "/etc/daemonize", nsGet(ns, "/etc/args/default/daemonize", False))
     return ns
 
 def nsCmd(ns, *args, **kw):

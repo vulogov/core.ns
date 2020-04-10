@@ -31,6 +31,8 @@ def nsDefaults(ns):
     nsSet(ns, "/etc/license", "GPL3")
     nsSet(ns, "/etc/url", "http://www.example.com")
     nsSet(ns, "/etc/shell.prompt", " #  ")
+    nsSet(ns, "/etc/daemonize", False)
+    nsSet(ns, "/etc/singleCopy", False)
     for c in nsGet(ns, "/config/cfg.path"):
         try:
             nsGet(ns, "/config/cfg.fs").append(open_fs(c))
