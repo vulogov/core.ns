@@ -17,6 +17,8 @@ def NS(**kw):
     nsMkdir(ns, "/config")
     nsMkdir(ns, "/etc")
     nsSet(ns, "/etc/fs", {})
+    nsSet(ns, "/etc/console", True)
+    nsSet(ns, "/etc/log", True)
     nsMkdir(ns, "/etc/init.d")
     nsMkdir(ns, "/etc/args")
     nsMkdir(ns, "/help")

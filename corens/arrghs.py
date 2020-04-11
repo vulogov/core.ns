@@ -64,7 +64,10 @@ def nsArgs(ns, args=sys.argv[1:]):
 
 
     nsSet(ns, "/etc/name", nsGet(ns, "/etc/args/default/appname", name))
-    nsSet(ns, "/etc/daemonize", nsGet(ns, "/etc/args/default/daemonize", False))
+    nsSet(ns, "/etc/daemonize", nsGet(ns, "/etc/flags/daemonize", False))
+    nsSet(ns, "/etc/console", nsGet(ns, "/etc/flags/console", True))
+    nsSet(ns, "/etc/log", nsGet(ns, "/etc/flags/log", True))
+
     return ns
 
 def nsCmd(ns, *args, **kw):

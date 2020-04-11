@@ -13,6 +13,7 @@ from corens.init import *
 from corens.hylang import nsHYInit, nsHyEval, nsHyPipeline, nsHyStartup
 from corens.env import nsEnvInit
 from corens.sig import nsSignalInit, nsSignalSetup
+from corens.txt import nsTxt
 
 
 def n(ns):
@@ -28,6 +29,8 @@ _lib = {
     '/bin/V': V,
     '/bin/I': I,
     '/bin/f': f,
+    '/bin/text': nsTxt,
+    '/bin/txt': nsTxt,
     '/bin/hy': nsHyEval,
     '/bin/h|': nsHyPipeline,
     '/sbin/hy.startup': nsHyStartup,

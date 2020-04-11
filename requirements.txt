@@ -10,6 +10,7 @@ boto==2.49.0
 certifi==2019.11.28
 cffi==1.13.2
 chardet==3.0.4
+Cheetah3==3.2.4
 Click==7.0
 clint==0.5.1
 colorama==0.4.3
@@ -47,6 +48,7 @@ requests-toolbelt==0.9.1
 returns==0.12.0
 rply==0.7.7
 scipy==1.4.1
+shell==1.0.1
 six==1.13.0
 textX==2.1.0
 tinyrpc==1.0.4

@@ -6,6 +6,8 @@ from corens.ns import nsGet
 
 def nsConsole(ns,  msg, **kw):
     _msg = msg % kw
+    if nsGet(ns, "/etc/console") is False:
+        return _msg
     q = nsGet(ns, "/sys/console")
     q.put_nowait(_msg)
     return _msg
