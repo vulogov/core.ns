@@ -1,5 +1,6 @@
 
 import gevent
+from Cheetah.Template import Template
 from clint.textui import indent, puts, colored
 from corens.ns import nsGet
 

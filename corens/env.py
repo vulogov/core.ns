@@ -6,8 +6,9 @@ import shutil
 import stat
 import fnmatch
 import socket
+import atexit
 from pathlib import Path
-from corens.ns import nsSet, nsGet, nsMkdir, nsGlobalError
+from corens.ns import nsSet, nsGet, nsMkdir, nsGlobalError, nsLs
 from corens.mod import I, lf
 from corens.cfg_grammar import nsCfgLoad, nsCfgFSLoad
 
@@ -25,14 +26,15 @@ def check_the_path(ns, path):
         return False
     return True
 
-def nsEnvRemovePidSignal(ns, sig, frame):
+def nsEnvRemovePid(ns):
     from corens.mod import lf
     f = lf(ns)
     V = f("V")
     if os.path.exists(nsGet(ns, "/sys/env/pidFile")) and os.path.isfile(nsGet(ns, "/sys/env/pidFile")):
         os.remove(nsGet(ns, "/sys/env/pidFile"))
 
-
+def nsEnvRemovePidSignal(ns, sig, frame):
+    nsEnvRemovePid(ns)
 
 def nsEnvLoadLocalBS(ns):
     CNS_HOME = nsGet(ns, "/sys/env/variables/CORENS_HOME")
@@ -118,3 +120,7 @@ def nsEnvInit(ns, *args, **kw):
             nsCfgFSLoad(ns, kw[k])
         else:
             pass
+
+def nsEnvSetup(ns):
+    for f in nsLs(ns, "/bin/atexit"):
+        atexit.register(nsGet(ns, "/bin/atexit/{}".format(f)))

@@ -11,7 +11,7 @@ from corens.version import nsVersion, nsRelease
 from corens.vns import *
 from corens.init import *
 from corens.hylang import nsHYInit, nsHyEval, nsHyPipeline, nsHyStartup
-from corens.env import nsEnvInit
+from corens.env import nsEnvInit, nsEnvSetup, nsEnvRemovePid
 from corens.sig import nsSignalInit, nsSignalSetup
 from corens.txt import nsTxt
 
@@ -57,9 +57,11 @@ _lib = {
     '/sbin/vnsinit': nsVNSinit,
     '/sbin/hyinit': nsHYInit,
     '/sbin/envinit': nsEnvInit,
+    '/sbin/envsetup': nsEnvSetup,
     '/sbin/init': nsInit,
     '/sbin/stop': nsStop,
     '/bin/main': nsDummyMain,
     '/sbin/signalinit': nsSignalInit,
     '/sbin/signalsetup': nsSignalSetup,
+    '/bin/atexit/removepid': nsEnvRemovePid,
 }

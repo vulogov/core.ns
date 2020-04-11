@@ -24,6 +24,7 @@ def nsGevent(ns, *args, **kw):
     nsSet(ns, "/dev/time", time.time())
     nsSet(ns, "/sys/greenlets", [])
     nsSet(ns, "/sys/greenlets.user", [])
+    nsSet(ns, "/sys/greenlets.kill", False)
     nsSet(ns, "/sys/scheduler", GeventScheduler())
     s = nsGet(ns, "/sys/scheduler")
     s.add_job(partial(nsGeventTick, ns), 'interval', seconds=1)
@@ -69,6 +70,7 @@ def _ns_greenlet_loop(ns, path):
     try:
         gevent.joinall(glist)
     except KeyboardInterrupt:
+        nsKillAll(ns)
         pass
 
 def nsLoopUser(ns):
@@ -79,4 +81,10 @@ def nsLoopSys(ns):
 
 
 def nsKillAll(ns):
+    if nsGet(ns, "/sys/greenlets.kill") is True:
+        return ns
+    nsGet("/sys/scheduler").shutdown(wait=False)
+    gevent.killall(nsGet("/sys/greenlets")[1:])
+    gevent.killall(nsGet("/sys/greenlets.user"))
+    nsSet(ns, "/sys/greenlets.kill", True)
     return ns
