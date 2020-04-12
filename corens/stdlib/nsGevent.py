@@ -34,7 +34,13 @@ _lib = {
     '/bin/spawn': nsSpawn,
     '/bin/daemon': nsDaemon,
     '/bin/loop': nsLoopUser,
-    '/sbin/loop': nsLoopSys
+    '/sbin/loop': nsLoopSys,
+    '/sbin/killall': nsKillAll,
+    '/bin/schedule': nsSchedulerIntervalJob,
+    '/bin/scheduleN': nsSchedulerIntervalJob,
+    '/bin/scheduleINT': nsSchedulerIntervalJob,
+    '/bin/sps': nsSchedulerPS,
+    '/bin/ps': nsGeventPS,
 }
 
 _tpl = {

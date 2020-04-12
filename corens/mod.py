@@ -91,3 +91,6 @@ def F(ns, *funcs):
 def lf(ns):
     f = nsGet(ns, "/bin/f")
     return f
+
+def p(ns, fun):
+    return partial(fun, ns)

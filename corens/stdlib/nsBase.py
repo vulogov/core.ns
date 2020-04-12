@@ -10,6 +10,7 @@ from corens.console import *
 from corens.version import nsVersion, nsRelease
 from corens.vns import *
 from corens.init import *
+from corens.mod import p
 from corens.hylang import nsHYInit, nsHyEval, nsHyPipeline, nsHyStartup
 from corens.env import nsEnvInit, nsEnvSetup, nsEnvRemovePid
 from corens.sig import nsSignalInit, nsSignalSetup
@@ -29,6 +30,7 @@ _lib = {
     '/bin/V': V,
     '/bin/I': I,
     '/bin/f': f,
+    '/bin/p': p,
     '/bin/text': nsTxt,
     '/bin/txt': nsTxt,
     '/bin/hy': nsHyEval,

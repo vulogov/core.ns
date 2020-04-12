@@ -8,6 +8,8 @@ from corens.ns import nsGet
 from corens.mod import F as _F
 from corens.mod import f as _f
 from corens.mod import lf as lf
+from corens.mod import p as p
+
 
 
 from corens.cfg import nsDefaults
