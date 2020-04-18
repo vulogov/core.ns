@@ -159,7 +159,8 @@ def nsCfgVM(ns, model):
 
 def _nsCfgFSLoad(ns, name):
     lfs = nsGet(ns, "/config/cfg.fs")
-    for _fs in lfs:
+    for _fsk in lfs:
+        _fs = lfs[_fsk]
         try:
             f = _fs.open(name)
             return f.read()

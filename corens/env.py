@@ -11,6 +11,7 @@ from pathlib import Path
 from corens.ns import nsSet, nsGet, nsMkdir, nsGlobalError, nsLs
 from corens.mod import I, lf
 from corens.cfg_grammar import nsCfgLoad, nsCfgFSLoad
+from corens.cfg import nsCfgAppendFs
 
 def nsEnvVars(ns):
     for e in os.environ:
@@ -69,6 +70,8 @@ def nsEnvLoadLocalBS(ns):
     nsSet(ns, "/sys/env/pidFileExists", pidExists)
     with open(nsGet(ns, "/sys/env/pidFile"), "w") as f:
         f.write(str(os.getpid()))
+    for p in cfg_path:
+        nsCfgAppendFs(ns, p)
 
 
 
@@ -102,6 +105,8 @@ def nsEnvInit(ns, *args, **kw):
     except socket.gaierror:
         nsSet(ns, "/sys/env/ip.addr", '127.0.0.1')
         nsSet(ns, "/sys/env/ip.addr.list", ['127.0.0.1'])
+    if nsGet(ns, "/etc/flags/truename", False) is True:
+        nsSet(ns, "/etc/hostname", nsGet(ns, "/sys/env/platform/node"))
     nsEnvLoadLocalBS(ns)
     for k in kw:
         _k = "/"+k[4:].replace("_", "/")

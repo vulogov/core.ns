@@ -10,7 +10,7 @@ def nsDefaults(ns):
     nsSet(ns, "/config/path", ["/home", "/bin", "/sbin"])
     nsSet(ns, "/config/dev.path", "/dev")
     nsSet(ns, "/config/cfg.path", ['osfs://.','osfs://tests'])
-    nsSet(ns, "/config/cfg.fs", [])
+    nsSet(ns, "/config/cfg.fs", {})
     nsSet(ns, "/config/cfg.files", [])
     nsSet(ns, "/config/library", ["corens.stdlib"])
     nsSet(ns, "/config/user.library", [])
@@ -33,10 +33,24 @@ def nsDefaults(ns):
     nsSet(ns, "/etc/shell.prompt", " #  ")
     nsSet(ns, "/etc/daemonize", False)
     nsSet(ns, "/etc/singleCopy", False)
+    nsSet(ns, "/etc/listen", {})
     for c in nsGet(ns, "/config/cfg.path"):
-        try:
-            nsGet(ns, "/config/cfg.fs").append(open_fs(c))
-        except CreateFailed:
-            continue
+        nsCfgAppendFs(ns, c)
     ns = nsCfgGrammar(ns)
     return ns
+
+def nsCfgAppendFs(ns, fsname):
+    cfg_fs = nsGet(ns, "/config/cfg.fs")
+    if fsname not in cfg_fs:
+        try:
+            nsGet(ns, "/config/cfg.fs")[fsname] = open_fs(fsname)
+        except CreateFailed:
+            return None
+    return nsGet(ns, "/config/cfg.fs")[fsname]
+
+def nsCfgListenParse(ns, listenspec):
+    try:
+        ix  = listenspec.index('@')
+        return listenspec[:ix], listenspec[ix+1:]
+    except ValueError:
+        return listenspec, listenspec

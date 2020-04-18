@@ -59,7 +59,7 @@ def nsVopen(ns, name, path=':mem:', **kw):
 def nsVmkfs(ns, name, path, *patt):
     path = os.path.abspath(path)
     if os.path.exists(path):
-        return False
+        return vedis.Vedis(path)
     v = vedis.Vedis(path)
     hdr = v.Hash("/.volume")
     hdr['id'] = dill.dumps(str(uuid.uuid4()))
@@ -68,8 +68,15 @@ def nsVmkfs(ns, name, path, *patt):
     hdr['path'] = dill.dumps(path)
     mapping = v.Set('/.mapping')
     for n in patt:
-        mapping.add(bytes(n))
-    return True
+        mapping.add(bytes(n, "ascii"))
+    return v
+
+def nsVdiskinfo(ns, fs):
+    hdr = fs.Hash("/.volume")
+    out  = {}
+    for k in hdr.to_dict():
+        out[k.decode("utf-8")] = dill.loads(hdr[k])
+    return out
 
 def nsVdiskmount(ns, *args, **kw):
     fstab = nsGet(ns, "/etc/fstab")
@@ -96,6 +103,7 @@ _lib = {
     '/sbin/mkfs.disk': nsVmkfs,
     '/sbin/mount.disk': nsVopen,
     '/sbin/remount.disk': nsVdiskmount,
+    '/sbin/info.disk': nsVdiskinfo,
 }
 
 _tpl = {

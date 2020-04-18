@@ -9,11 +9,11 @@ def nsVNSinit(ns, *args, **kw):
 def nsVNSRegister(ns, name, **kw):
     fstab = V(ns, "/etc/fstab")
     if name in fstab:
-        return False
+        return fstab[name]
     if 'type' not in kw:
-        return False
+        return None
     fstab[name] = kw
-    return True
+    return kw
 
 def nsVNSget(ns, name):
     fstab = V(ns, "/etc/fstab")
