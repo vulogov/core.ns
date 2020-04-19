@@ -7,11 +7,14 @@ import stat
 import fnmatch
 import socket
 import atexit
+import time
+import psutil
 from pathlib import Path
 from corens.ns import nsSet, nsGet, nsMkdir, nsGlobalError, nsLs
 from corens.mod import I, lf
 from corens.cfg_grammar import nsCfgLoad, nsCfgFSLoad
 from corens.cfg import nsCfgAppendFs
+from corens.console import nsConsole, nsconsole
 
 def nsEnvVars(ns):
     for e in os.environ:
@@ -29,8 +32,14 @@ def check_the_path(ns, path):
 
 def nsEnvRemovePid(ns):
     from corens.mod import lf
+    daemonFile = "{}.daemon".format(nsGet(ns, "/sys/env/pidFile"))
+    if os.path.exists(daemonFile) and os.path.isfile(daemonFile):
+        return
+    nsconsole(ns, "Removing PID file")
     f = lf(ns)
     V = f("V")
+    if nsGet(ns, "/etc/daemonize") is True:
+        return
     if os.path.exists(nsGet(ns, "/sys/env/pidFile")) and os.path.isfile(nsGet(ns, "/sys/env/pidFile")):
         os.remove(nsGet(ns, "/sys/env/pidFile"))
 
@@ -65,17 +74,38 @@ def nsEnvLoadLocalBS(ns):
     if os.path.exists(nsGet(ns, "/sys/env/pidFile")) and os.path.isfile(nsGet(ns, "/sys/env/pidFile")):
         pidExists = True
     if nsGet(ns, "/etc/singleCopy") is True and pidExists is True:
+        nsConsole(ns, "Application $etc.name already running")
         nsGlobalError(ns, "Application {} already running.".format(CNS_NAME))
         raise SystemExit
     nsSet(ns, "/sys/env/pidFileExists", pidExists)
-    with open(nsGet(ns, "/sys/env/pidFile"), "w") as f:
-        f.write(str(os.getpid()))
+    if nsGet(ns, "/etc/flags/daemonize", False):
+        nsEnvMkPID(ns)
     for p in cfg_path:
         nsCfgAppendFs(ns, p)
 
 
+def nsEnvMkPID(ns):
+    if nsEnvLoadPid(ns) is not None:
+        return
+    with open(nsGet(ns, "/sys/env/pidFile"), "w") as f:
+        f.write(str(os.getpid()))
 
-
+def nsEnvLoadPid(ns):
+    try:
+        with open(nsGet(ns, "/sys/env/pidFile"), "r") as f:
+            try:
+                pid = int(f.read())
+            except ValueError:
+                return None
+    except FileNotFoundError:
+        return None
+    try:
+        me = psutil.Process(pid)
+    except psutil.NoSuchProcess:
+        return None
+    if me.is_running() is True:
+        return pid
+    return None
 
 def nsEnvInit(ns, *args, **kw):
     f = lf(ns)
@@ -99,6 +129,9 @@ def nsEnvInit(ns, *args, **kw):
     nsSet(ns, "/sys/env/home.disk.used", home_used)
     nsSet(ns, "/sys/env/home.disk.free", home_free)
     nsSet(ns, "/sys/env/home.disk.free.percent", (home_free/home_total)*100)
+    nsSet(ns, "/sys/env/bootTimestamp", time.time())
+    nsSet(ns, "/sys/env/pid", os.getpid())
+    nsSet(ns, "/sys/env/me", psutil.Process(os.getpid()))
     try:
         nsSet(ns, "/sys/env/ip.addr", socket.gethostbyname(socket.gethostname()))
         nsSet(ns, "/sys/env/ip.addr.list", socket.gethostbyname_ex(socket.gethostname())[2])

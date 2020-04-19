@@ -9,6 +9,7 @@ from corens.ns import *
 from corens.help import *
 from corens.mod import f
 from corens.cfg import nsCfgAppendFs, nsCfgListenParse
+from corens.console import nsConsole, nsconsole
 
 def nsArgs(ns, args=sys.argv[1:]):
     if len(sys.argv) == 0 or sys.argv[0] == '':
@@ -112,9 +113,12 @@ def nsCmd(ns, *args, **kw):
     for k in argv:
         _args = tuple([out,] + list(args))
         try:
+            nsconsole(ns, "CMD executed: {}/{}".format(root, k))
             out = f(ns, "{}/{}".format(root, k))(*_args, **kw)
             nsSet(ns, "/config/cmd.run", True)
         except TypeError:
+        #except KeyboardInterrupt:
+            nsconsole(ns, "CMD not found: {}/{}".format(root, k))
             nsGlobalError(ns, "Command {}/{} not found".format(root, k))
             continue
     return ns

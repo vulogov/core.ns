@@ -35,6 +35,11 @@ def NS(*args, **kw):
     _f(ns, "/sbin/envsetup")()
     _f(ns, "/sbin/init")(*args, **kw)
     _f(ns, "/bin/cmd")(*args, **kw)
-    if nsGet(ns, "/config/cmd.run") is False:
-            _f(ns, "/bin/main")(*args, **kw)
+    if nsGet(ns, "/config/cmd.run") is False and nsGet(ns, "/etc/daemonize") is False:
+            if nsGet(ns, "/etc/daemonize") is False:
+                _f(ns, "/bin/main")(*args, **kw)
+            elif nsGet(ns, "/etc/daemonize") is True:
+                _f(ns, "/bin/daemon_main")(*args, **kw)
+            else:
+                pass
     return (ns, partial(_f, ns), partial(_F, ns))

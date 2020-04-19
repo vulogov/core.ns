@@ -6,6 +6,7 @@ from toolz import partial
 from corens.ns import *
 from corens.mod import f, lf
 from corens.tpl import nsMk
+from corens.console import nsConsoleDaemon
 
 def nsGInput(ns):
     prompt = nsGet(ns, "/etc/shell.prompt")
@@ -49,6 +50,7 @@ def nsGevent(ns, *args, **kw):
     glist.append(g)
     nsMk(ns, "queue")
     f(ns, "/dev/queue/open")("shell")
+    nsDaemon(ns, "ConsoleHandler", nsConsoleDaemon, ns)
     return ns
 
 def nsProcAlloc(ns, name, g, **kw):
