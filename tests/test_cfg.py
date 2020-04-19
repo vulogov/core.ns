@@ -55,6 +55,25 @@ def test_cfg_6():
     C('[ /home > [1, 3.14, "Hello"] -> List ;;' )
     assert len(V('/home/List')) == 3
 
+def test_cfg_6_1():
+    ns, f, F = NS()
+    V = f("V")
+    C = f("C")
+    C('[ /home > { Answer:42 } -> Dict ;;' )
+    assert len(V('/home/Dict')) == 1
+
+def test_cfg_6_2():
+    ns, f, F = NS()
+    V = f("V")
+    C = f("C")
+    C("""[ /home >
+    {
+        Answer:42,
+        "vfs.fs.disk[]" : "u"
+    } -> Dict ;;""" )
+    assert len(V('/home/Dict')) == 2
+
+
 def test_cfg_7():
     ns, f, F = NS()
     V = f("V")

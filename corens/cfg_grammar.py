@@ -36,7 +36,7 @@ ReverseAssignmentDef:
 ;
 
 NameDef:
-    ID
+    ID | STRING
 ;
 
 NSID:

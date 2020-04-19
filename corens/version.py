@@ -1,6 +1,6 @@
 
 VERSION='0.0'
-RELEASE='0.0.6'
+RELEASE='0.0.7'
 URL='https://github.com/vulogov/core.ns'
 AUTHOR='Vladimir Ulogov'
 AUTHOR_EMAIL='vladimir.ulogov@me.com'
