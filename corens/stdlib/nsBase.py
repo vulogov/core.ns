@@ -64,6 +64,7 @@ _lib = {
     '/sbin/stop': nsStop,
     '/bin/main': nsDummyMain,
     '/sbin/signalinit': nsSignalInit,
+    '/sbin/loginit': nsLogInit,
     '/sbin/signalsetup': nsSignalSetup,
     '/bin/atexit/removepid': nsEnvRemovePid,
 }

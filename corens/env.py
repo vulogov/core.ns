@@ -9,12 +9,14 @@ import socket
 import atexit
 import time
 import psutil
+import uuid
 from pathlib import Path
 from corens.ns import nsSet, nsGet, nsMkdir, nsGlobalError, nsLs
 from corens.mod import I, lf
 from corens.cfg_grammar import nsCfgLoad, nsCfgFSLoad
 from corens.cfg import nsCfgAppendFs
 from corens.console import nsConsole, nsconsole
+from corens.gevt import nsSchedulerIntervalJob
 
 def nsEnvVars(ns):
     for e in os.environ:
@@ -31,15 +33,14 @@ def check_the_path(ns, path):
     return True
 
 def nsEnvRemovePid(ns):
-    from corens.mod import lf
     daemonFile = "{}.daemon".format(nsGet(ns, "/sys/env/pidFile"))
     if os.path.exists(daemonFile) and os.path.isfile(daemonFile):
         return
-    nsconsole(ns, "Removing PID file")
     f = lf(ns)
     V = f("V")
     if nsGet(ns, "/etc/daemonize") is True:
         return
+    nsconsole(ns, "Removing PID file")
     if os.path.exists(nsGet(ns, "/sys/env/pidFile")) and os.path.isfile(nsGet(ns, "/sys/env/pidFile")):
         os.remove(nsGet(ns, "/sys/env/pidFile"))
 
@@ -107,9 +108,11 @@ def nsEnvLoadPid(ns):
         return pid
     return None
 
+
 def nsEnvInit(ns, *args, **kw):
     f = lf(ns)
     nsMkdir(ns, "/sys/env")
+    nsSet(ns, "/sys/env/id", str(uuid.uuid4()))
     nsMkdir(ns, "/sys/env/variables")
     nsMkdir(ns, "/sys/env/platform")
     nsEnvVars(ns)
@@ -132,6 +135,8 @@ def nsEnvInit(ns, *args, **kw):
     nsSet(ns, "/sys/env/bootTimestamp", time.time())
     nsSet(ns, "/sys/env/pid", os.getpid())
     nsSet(ns, "/sys/env/me", psutil.Process(os.getpid()))
+    nsMkdir(ns, "/sys/env/proc")
+
     try:
         nsSet(ns, "/sys/env/ip.addr", socket.gethostbyname(socket.gethostname()))
         nsSet(ns, "/sys/env/ip.addr.list", socket.gethostbyname_ex(socket.gethostname())[2])

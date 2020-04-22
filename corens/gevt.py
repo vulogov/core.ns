@@ -7,6 +7,7 @@ from corens.ns import *
 from corens.mod import f, lf
 from corens.tpl import nsMk
 from corens.console import nsConsoleDaemon
+from corens.log import nsLogDaemon
 
 def nsGInput(ns):
     prompt = nsGet(ns, "/etc/shell.prompt")
@@ -43,14 +44,16 @@ def nsGevent(ns, *args, **kw):
     nsSet(ns, "/sys/scheduler", GeventScheduler())
     s = nsGet(ns, "/sys/scheduler")
     nsSchedulerIntervalJob(ns, 60, "/dev/time", nsGeventTick)
-    #s.add_job(partial(nsGeventTick, ns), 'interval', seconds=60)
     g = s.start()
     ns = nsProcAlloc(ns, "scheduler", g, scheduler=s)
     glist = nsGet(ns, "/sys/greenlets")
     glist.append(g)
     nsMk(ns, "queue")
     f(ns, "/dev/queue/open")("shell")
-    nsDaemon(ns, "ConsoleHandler", nsConsoleDaemon, ns)
+    if nsGet("/etc/console") is True:
+        nsDaemon(ns, "ConsoleHandler", nsConsoleDaemon, ns)
+    if nsGet("/etc/log") is True:
+        nsDaemon(ns, "LogHandler", nsLogDaemon, ns)
     return ns
 
 def nsProcAlloc(ns, name, g, **kw):

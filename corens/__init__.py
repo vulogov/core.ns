@@ -10,6 +10,7 @@ from corens.mod import f as _f
 from corens.mod import lf as lf
 from corens.mod import p as p
 
+import time
 
 
 from corens.cfg import nsDefaults
@@ -17,12 +18,14 @@ from corens.cfg import nsDefaults
 def NS(*args, **kw):
     from corens.mod import nsImport
     ns = _NS()
+
     ns = nsDefaults(ns)
     ns = nsImport(ns, nsGet(ns, "/config/library"))
     cargs = kw.get('args', sys.argv[1:])
     _f(ns, "/bin/args")(cargs)
     _f(ns, "/sbin/signalinit")(*args, **kw)
     _f(ns, "/sbin/envinit")(*args, **kw)
+    _f(ns, "/sbin/loginit")(*args, **kw)
     for c in nsGet(ns, "/config/cfg.files"):
         _f(ns, "/bin/Cfg")(c)
     ns = nsImport(ns, nsGet(ns, "/config/user.library"))
@@ -34,6 +37,7 @@ def NS(*args, **kw):
     _f(ns, "/sbin/signalsetup")(*args, **kw)
     _f(ns, "/sbin/envsetup")()
     _f(ns, "/sbin/init")(*args, **kw)
+    _f(ns, "/sbin/zmqinit")(*args, **kw)
     _f(ns, "/bin/cmd")(*args, **kw)
     if nsGet(ns, "/config/cmd.run") is False and nsGet(ns, "/etc/daemonize") is False:
             if nsGet(ns, "/etc/daemonize") is False:

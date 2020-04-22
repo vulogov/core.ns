@@ -1,11 +1,19 @@
 import time
 import uuid
+from corens.txt import nsTxt
 from corens.ns import nsGlobalError, nsGet, nsLs
 
 LOG_LEVELS=['debug', 'info', 'warning', 'error', 'critical', 'panic']
 
+def nsLogInit(ns, *args, **kw):
+    nsSet(ns, "/etc/logToConsole", True)
+    return
+
 def nsLog(ns, lvl, msg, **kw):
+    if nsGet("/etc/log") is False:
+        return None
     out = {'level': lvl, 'msg': msg % kw, 'id':str(uuid.uuid4()), 'stamp': time.time()}
+    out['msg'] = nsTxt(ns, out['msg'])
     q = nsGet(ns, "/sys/log/messages")
     q.put_nowait(out)
     if lvl >=4:
@@ -44,6 +52,12 @@ def nsLogProcess(ns, entries=1):
             logs[log].write(msg)
         if c >= entries:
             break
+        gevent.sleep(nsGet(ns, "/etc/logInBatchDelay", 0.5))
+
+def nsLogDaemon(ns):
+    while True:
+        nsLogProcess(ns, nsGet(ns, "/etc/logBatchSize", 10))
+        gevent.sleep(nsGet(ns, "/etc/logAfterBatchDelay", 3))
 
 def nsLogSize(ns, entries=1):
     q = nsGet(ns, "/sys/log/messages")

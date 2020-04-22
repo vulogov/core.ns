@@ -73,6 +73,15 @@ def test_cfg_6_2():
     } -> Dict ;;""" )
     assert len(V('/home/Dict')) == 2
 
+def test_cfg_6_3():
+    ns, f, F = NS()
+    V = f("V")
+    C = f("C")
+    C("""[ /home >
+    {
+        Answer:42, "vfs.fs.disk[]" : "u"
+    } -> Dict ;;""" )
+    assert len(V('/home/Dict')) == 2
 
 def test_cfg_7():
     ns, f, F = NS()
