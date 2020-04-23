@@ -10,6 +10,7 @@ from corens.help import *
 from corens.mod import f
 from corens.cfg import nsCfgAppendFs, nsCfgListenParse
 from corens.console import nsConsole, nsconsole
+from clint.textui import colored
 
 def nsArgs(ns, args=sys.argv[1:]):
     if len(sys.argv) == 0 or sys.argv[0] == '':
@@ -106,6 +107,7 @@ def nsArgs(ns, args=sys.argv[1:]):
     nsSet(ns, "/etc/daemonize", nsGet(ns, "/etc/flags/daemonize", False))
     nsSet(ns, "/etc/console", nsGet(ns, "/etc/flags/console", True))
     nsSet(ns, "/etc/log", nsGet(ns, "/etc/flags/log", True))
+    colored.DISABLE_COLOR=nsGet(ns, "/etc/flags/color", False)
     return ns
 
 def nsCmd(ns, *args, **kw):
