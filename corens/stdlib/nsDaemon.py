@@ -47,6 +47,34 @@ def nsDaemonStatus(ns, *args, **kw):
         nsconsole(ns, "Process is not running")
         nsDaemonCleanUp(ns)
 
+def nsDaemonSystemLoop(ns, *args, **kw):
+    f = lf(ns)
+    V = f("V")
+    if V("/etc/daemonize") is True:
+        nsConsole(ns, "[/sbin/loop] No can do: +daemonize is requested.")
+        return
+    pid = nsEnvLoadPid(ns)
+    if pid is not None:
+        me = psutil.Process(pid)
+        if me.is_running() is True:
+            nsconsole(ns, "Process already running with PID %d"%pid)
+            return
+    f("/sbin/loop")(*args, **kw)
+
+def nsDaemonLoop(ns, *args, **kw):
+    f = lf(ns)
+    V = f("V")
+    if V("/etc/daemonize") is True:
+        nsConsole(ns, "[/bin/loop] No can do: +daemonize is requested.")
+        return
+    pid = nsEnvLoadPid(ns)
+    if pid is not None:
+        me = psutil.Process(pid)
+        if me.is_running() is True:
+            nsconsole(ns, "Process already running with PID %d"%pid)
+            return
+    f("/bin/loop")(*args, **kw)
+
 
 _lib = {
     '/bin/setproctitle': nsDaemonProcTitle,
@@ -55,4 +83,7 @@ _lib = {
     '/usr/local/bin/stop': nsDaemonStop,
     '/usr/local/bin/_stop': nsDaemonStopInt,
     '/usr/local/bin/status': nsDaemonStatus,
+    '/usr/local/bin/main': nsDaemonSystemLoop,
+    '/usr/local/bin/loop': nsDaemonSystemLoop,
+
 }

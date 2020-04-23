@@ -108,6 +108,13 @@ def nsEnvLoadPid(ns):
         return pid
     return None
 
+def nsProcTick(ns):
+    p = psutil.Process()
+    with p.oneshot():
+        nsSet(ns, "/sys/env/proc/name", p.name())
+        nsSet(ns, "/sys/env/proc/cpuTimes", p.cpu_times())
+        nsSet(ns, "/sys/env/proc/cpuPercent", p.cpu_percent())
+        nsSet(ns, "/sys/env/proc/createTime", p.create_time())
 
 def nsEnvInit(ns, *args, **kw):
     f = lf(ns)
@@ -136,7 +143,6 @@ def nsEnvInit(ns, *args, **kw):
     nsSet(ns, "/sys/env/pid", os.getpid())
     nsSet(ns, "/sys/env/me", psutil.Process(os.getpid()))
     nsMkdir(ns, "/sys/env/proc")
-
     try:
         nsSet(ns, "/sys/env/ip.addr", socket.gethostbyname(socket.gethostname()))
         nsSet(ns, "/sys/env/ip.addr.list", socket.gethostbyname_ex(socket.gethostname())[2])
@@ -165,5 +171,6 @@ def nsEnvInit(ns, *args, **kw):
             pass
 
 def nsEnvSetup(ns):
+    nsSchedulerIntervalJob(ns, 60, "/dev/proc", nsProcTick)
     for f in nsLs(ns, "/bin/atexit"):
         atexit.register(nsGet(ns, "/bin/atexit/{}".format(f)))

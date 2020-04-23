@@ -34,10 +34,12 @@ def nsDefaults(ns):
     nsSet(ns, "/etc/daemonize", False)
     nsSet(ns, "/etc/singleCopy", False)
     nsSet(ns, "/etc/listen", {})
+    nsSet(ns, "/etc/listen_rpc", {})
     # Console and log configuration
     nsSet(ns, "/etc/consoleInBatchDelay", 0.5)
     nsSet(ns, "/etc/consoleAfterBatchDelay", 3)
     nsSet(ns, "/etc/consoleBatchSize", 10)
+    nsSet(ns, "/etc/consoleEmitter", "tcp://127")
     nsSet(ns, "/etc/logInBatchDelay", 0.5)
     nsSet(ns, "/etc/logAfterBatchDelay", 3)
     nsSet(ns, "/etc/logBatchSize", 10)

@@ -1,27 +1,35 @@
 import gevent
+import time
+import json
 from Cheetah.Template import Template
 from clint.textui import indent, puts, colored
 from corens.ns import nsGet
 from corens.txt import nsTxt
 
 
-def nsConsole(ns,  msg, **kw):
+def nsConsole(ns,  *msg, **kw):
     if nsGet(ns, "/etc/console") is False:
-        return _msg
-    _msg = msg % kw
-    _msg = nsTxt(ns, _msg)
+        return msg
     q = nsGet(ns, "/sys/console")
-    q.put_nowait(_msg)
+    for _m in msg:
+        _m = str(_m)
+        _msg = _m % kw
+        _msg = nsTxt(ns, _msg)
+        q.put_nowait(_msg)
     return _msg
 
-def nsconsole(ns, msg, **kw):
-    _msg = msg % kw
-    _msg = nsTxt(ns, _msg)
-    try:
-        with indent(4, quote=colored.green("|")):
-            puts(_msg)
-    except ValueError:
-        return
+def nsconsole(ns, *msg, **kw):
+    if nsGet(ns, "/etc/console") is False:
+        return msg
+    for _m in msg:
+        _m = str(_m)
+        _msg = _m % kw
+        _msg = nsTxt(ns, _msg)
+        try:
+            with indent(4, quote=colored.green("|")):
+                puts(_msg)
+        except ValueError:
+            return
 
 def nsConsoleProcess(ns, entries=1):
     q = nsGet(ns, "/sys/console")
@@ -32,13 +40,16 @@ def nsConsoleProcess(ns, entries=1):
             c += 1
         else:
             break
-        if isinstance(msg, str):
+        if isinstance(msg, str) is True:
             with indent(4, quote=colored.green("|")):
                 puts(msg)
-            if c >= entries:
-                break
-        elif isinstance(msg, dict):
-
+        elif isinstance(msg, dict) is True:
+            nsConsoleLogWrite(ns, msg)
+        else:
+            with indent(4, quote=colored.cyan("|")):
+                puts(str(msg))
+        if c >= entries:
+            break
         gevent.sleep(nsGet(ns, "/etc/consoleInBatchDelay", 0.5))
 
 def nsConsoleDaemon(ns):
@@ -49,3 +60,17 @@ def nsConsoleDaemon(ns):
 def nsConsoleSize(ns):
     q = nsGet(ns, "/sys/console")
     return q.qsize()
+
+def nsConsoleLogWrite(ns, msg):
+    if nsGet(ns, "/etc/logConsoleAsJSON", False) is True:
+        print(json.dumps(msg))
+        return
+    level_m = ["DBG", "INF", "WRN", "ERR", "CRT", "PNC"]
+    level_c = [colored.white, colored.green, colored.cyan,
+    colored.yellow, colored.red, colored.magenta]
+    print(level_c[msg['level']](level_m[msg['level']]),
+        colored.white(time.strftime("[%m/%d %H:%M:%S]", time.localtime(msg['stamp']))),
+        colored.yellow(msg['msg']))
+    if msg['level'] == 5:
+        nsConsole(ns, "DON'T PANIC !")
+    return

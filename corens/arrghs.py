@@ -23,6 +23,7 @@ def nsArgs(ns, args=sys.argv[1:]):
     nsSet(ns, "{}/default/bootstrap".format(path), [])
     nsSet(ns, "{}/default/userlib".format(path), [])
     nsSet(ns, "{}/default/listen".format(path), [])
+    nsSet(ns, "{}/default/listen_rpc".format(path), [])
     nsSet(ns, "/etc/argv", [])
     nsSet(ns, "/etc/name", name)
     argv = nsGet(ns, "/etc/argv")
@@ -88,6 +89,11 @@ def nsArgs(ns, args=sys.argv[1:]):
     userlib = nsGet(ns, "/config/user.library")
     userlib += nsGet(ns, "/etc/args/default/userlib")
     listen_list = nsGet(ns, "/etc/listen")
+    for l in nsGet(ns, "/etc/args/default/listen"):
+        _name, _listen = nsCfgListenParse(ns, l)
+        if _name not in listen_list:
+            listen_list[_name] = _listen
+    listen_list = nsGet(ns, "/etc/listen_rpc")
     for l in nsGet(ns, "/etc/args/default/listen"):
         _name, _listen = nsCfgListenParse(ns, l)
         if _name not in listen_list:

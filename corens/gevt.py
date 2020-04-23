@@ -27,7 +27,7 @@ def nsSchedulerIntervalJob(ns, seconds, name, fun, *args, **kw):
     else:
         _fun = partial(fun, ns)
     scheduler = nsGet(ns, "/sys/scheduler")
-    return scheduler.add_job(_fun, 'interval', seconds=seconds, name=name, args=args, kwargs=kw, max_instances=1, replace_existing=True)
+    return scheduler.add_job(_fun, 'interval', seconds=seconds, name=name, args=args, kwargs=kw, max_instances=nsGet(ns, "/etc/maxScheduleJobs", 10), replace_existing=True)
 
 def nsSchedulerPS(ns):
     return nsGet(ns, "/sys/scheduler").get_jobs()
@@ -36,6 +36,9 @@ def nsGeventPS(ns):
     return nsGet(ns, "/sys/greenlets")[1:] +  nsGet(ns, "/sys/greenlets.user")
 
 def nsGevent(ns, *args, **kw):
+    job_conf = {
+        'max_instances': nsGet(ns, "/etc/maxScheduleJobs", 10)
+    }
     nsMkdir(ns, "/proc")
     nsSet(ns, "/dev/time", time.time())
     nsSet(ns, "/sys/greenlets", [])
@@ -50,9 +53,9 @@ def nsGevent(ns, *args, **kw):
     glist.append(g)
     nsMk(ns, "queue")
     f(ns, "/dev/queue/open")("shell")
-    if nsGet("/etc/console") is True:
+    if nsGet(ns, "/etc/console") is True:
         nsDaemon(ns, "ConsoleHandler", nsConsoleDaemon, ns)
-    if nsGet("/etc/log") is True:
+    if nsGet(ns, "/etc/log") is True:
         nsDaemon(ns, "LogHandler", nsLogDaemon, ns)
     return ns
 

@@ -15,6 +15,7 @@ from corens.hylang import nsHYInit, nsHyEval, nsHyPipeline, nsHyStartup
 from corens.env import nsEnvInit, nsEnvSetup, nsEnvRemovePid
 from corens.sig import nsSignalInit, nsSignalSetup
 from corens.txt import nsTxt
+from corens.log import nsLogToConsole
 
 
 def n(ns):
@@ -67,4 +68,5 @@ _lib = {
     '/sbin/loginit': nsLogInit,
     '/sbin/signalsetup': nsSignalSetup,
     '/bin/atexit/removepid': nsEnvRemovePid,
+    '/sys/log/channels/console': nsLogToConsole,
 }

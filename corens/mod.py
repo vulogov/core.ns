@@ -41,13 +41,13 @@ def _nsImport(ns, module):
             _actions = None
         if _init is not None:
             for i in _init:
-                nsMkdir("/etc/init.d/{}".format(i))
+                nsMkdir(ns, "/etc/init.d/{}".format(i))
         if _actions is not None:
             for k in _actions:
                 path = "/etc/init.d/{}".format(k)
-                for j in _action[k]:
+                for j in _actions[k]:
                     _path = "{}/{}".format(path, j)
-                    nsSet(ns, _path, partial(_action[k][j], ns))
+                    nsSet(ns, _path, partial(_actions[k][j], ns))
         if _lib is not None:
             for k in _lib:
                 nsSet(ns, k, partial(_lib[k], ns))
