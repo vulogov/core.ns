@@ -49,6 +49,8 @@ def nsDefaults(ns):
     nsSet(ns, "/config/defaultInternalPort", 61000)
     nsSet(ns, "/config/defaultInternalMax", 10)
     nsSet(ns, "/config/RPCCatchCalls", False)
+    #
+    nsSet(ns, "/etc/shutdownRequested", False)
 
     for c in nsGet(ns, "/config/cfg.path"):
         nsCfgAppendFs(ns, c)

@@ -25,9 +25,11 @@ def nsArgs(ns, args=sys.argv[1:]):
     nsSet(ns, "{}/default/userlib".format(path), [])
     nsSet(ns, "{}/default/listen".format(path), [])
     nsSet(ns, "{}/default/rpc".format(path), [])
+    nsSet(ns, "{}/default/group".format(path), [])
     nsSet(ns, "/etc/argv", [])
     nsSet(ns, "/etc/name", name)
     nsSet(ns, "/etc/rpc", {})
+    nsSet(ns, "/etc/groups", [])
     argv = nsGet(ns, "/etc/argv")
     _args = nsGet(ns, path)
     args = clint.arguments.Args(args, True)
@@ -100,6 +102,12 @@ def nsArgs(ns, args=sys.argv[1:]):
         _name, _listen = nsCfgListenParse(ns, l)
         if _name not in listen_rpc:
             listen_rpc[_name] = _listen
+    listen_rpc = nsGet(ns, "/etc/group")
+    for l in nsGet(ns, "/etc/args/default/rpc"):
+        _name, _listen = nsCfgListenParse(ns, l)
+        if _name not in listen_rpc:
+            listen_rpc[_name] = _listen
+    nsArgsPopulate(ns, "/etc/args/default/group", "/etc/groups")
     cfg_fs_path = nsGet(ns, "/config/cfg.fs")
     for b in nsGet(ns, "/etc/args/default/bootstrap"):
         nsCfgAppendFs(ns, b)
@@ -110,6 +118,20 @@ def nsArgs(ns, args=sys.argv[1:]):
     nsSet(ns, "/etc/log", nsGet(ns, "/etc/flags/log", True))
     colored.DISABLE_COLOR=nsGet(ns, "/etc/flags/color", False)
     return ns
+
+def nsArgsPopulate(ns, _from, _to):
+    _to_val = nsGet(ns, _to)
+    if _to_val is None:
+        nsSet(ns, _to, [])
+        _to_val = nsGet(ns, _to)
+    _from_val = nsGet(ns, _from)
+    if _from_val is None:
+        return
+    if isinstance(_from_val, list) is not True:
+        return
+    _to_val += _from_val
+
+
 
 def nsCmd(ns, *args, **kw):
     argv = nsGet(ns, "/etc/argv", [])
