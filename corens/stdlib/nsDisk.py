@@ -33,7 +33,7 @@ def nsVget(ns, ctx, key):
 
 def nsVinit(ns, *args, **kw):
     dev_path = nsGet(ns, "/config/dev/path", "/dev")
-    nsMkdir(ns, "{}/volumes")
+    nsMkdir(ns, "{}/volumes".format(dev_path))
 
 def nsVopen(ns, name, path=':mem:', **kw):
     dev_path = kw.get("target", None)

@@ -24,9 +24,10 @@ def nsArgs(ns, args=sys.argv[1:]):
     nsSet(ns, "{}/default/bootstrap".format(path), [])
     nsSet(ns, "{}/default/userlib".format(path), [])
     nsSet(ns, "{}/default/listen".format(path), [])
-    nsSet(ns, "{}/default/listen_rpc".format(path), [])
+    nsSet(ns, "{}/default/rpc".format(path), [])
     nsSet(ns, "/etc/argv", [])
     nsSet(ns, "/etc/name", name)
+    nsSet(ns, "/etc/rpc", {})
     argv = nsGet(ns, "/etc/argv")
     _args = nsGet(ns, path)
     args = clint.arguments.Args(args, True)
@@ -94,11 +95,11 @@ def nsArgs(ns, args=sys.argv[1:]):
         _name, _listen = nsCfgListenParse(ns, l)
         if _name not in listen_list:
             listen_list[_name] = _listen
-    listen_list = nsGet(ns, "/etc/listen_rpc")
-    for l in nsGet(ns, "/etc/args/default/listen"):
+    listen_rpc = nsGet(ns, "/etc/rpc")
+    for l in nsGet(ns, "/etc/args/default/rpc"):
         _name, _listen = nsCfgListenParse(ns, l)
-        if _name not in listen_list:
-            listen_list[_name] = _listen
+        if _name not in listen_rpc:
+            listen_rpc[_name] = _listen
     cfg_fs_path = nsGet(ns, "/config/cfg.fs")
     for b in nsGet(ns, "/etc/args/default/bootstrap"):
         nsCfgAppendFs(ns, b)

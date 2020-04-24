@@ -16,7 +16,15 @@ def nsConsole(ns,  *msg, **kw):
         _msg = _m % kw
         _msg = nsTxt(ns, _msg)
         q.put_nowait(_msg)
-    return _msg
+    return msg
+
+def nsConsolePush(ns, *msg):
+    if nsGet(ns, "/etc/console") is False:
+        return msg
+    q = nsGet(ns, "/sys/console")
+    for _m in msg:
+        q.put_nowait(_m)
+
 
 def nsconsole(ns, *msg, **kw):
     if nsGet(ns, "/etc/console") is False:
@@ -43,8 +51,12 @@ def nsConsoleProcess(ns, entries=1):
         if isinstance(msg, str) is True:
             with indent(4, quote=colored.green("|")):
                 puts(msg)
-        elif isinstance(msg, dict) is True:
+        elif isinstance(msg, dict) is True and "dir" not in msg:
             nsConsoleLogWrite(ns, msg)
+        elif isinstance(msg, dict) is True and "dir" in msg:
+            with indent(4, quote=colored.magenta(msg["dir"])):
+                del msg["dir"]
+                puts(json.dumps(msg))
         else:
             with indent(4, quote=colored.cyan("|")):
                 puts(str(msg))

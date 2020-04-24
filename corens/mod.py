@@ -39,6 +39,13 @@ def _nsImport(ns, module):
             _actions = getattr(_module, '_actions')
         except AttributeError:
             _actions = None
+        try:
+            _dirs = getattr(_module, '_mkdir')
+        except AttributeError:
+            _dirs = None
+        if _dirs is not None:
+            for i in _dirs:
+                nsMkdir(ns, i)
         if _init is not None:
             for i in _init:
                 nsMkdir(ns, "/etc/init.d/{}".format(i))

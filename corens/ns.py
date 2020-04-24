@@ -2,8 +2,9 @@ import sys
 import time
 import uuid
 import fnmatch
+import os.path
+import copy
 from  gevent import queue
-import fnmatch
 from dpath.util import get as dget
 from dpath.util import set as dset
 from dpath.util import new as dnew
@@ -51,6 +52,10 @@ def nsErrorClear(ns):
     nsSet(ns, "/sys/error.msg", None)
 
 def nsMkdir(ns, path, **kw):
+    if path == "/" or not path:
+        return ns
+    else:
+        nsMkdir(ns, os.path.dirname(path), **kw)
     try:
         d = dget(ns, "{}/__dir__".format(path))
         if d is not True:
@@ -63,6 +68,8 @@ def nsMkdir(ns, path, **kw):
     return nsGet(ns, path, None)
 
 def nsGet(ns, path, default=None):
+    if path[-1] == '/':
+        path = path[:-1]
     try:
         return dget(ns, path)
     except KeyError:
@@ -72,16 +79,26 @@ def nsLs(ns, path):
     res = nsGet(ns, path, {})
     if '__dir__' in res and res.get('__dir__') != True:
         return {}
+    out = {}
     for k in list(res.keys()):
-        if fnmatch.fnmatch(k, "__*") is True:
-            del res[k]
-    return res
+        if fnmatch.fnmatch(k, "__*") is not True:
+            out[k] = res[k]
+    return out
+
+def nsDir(ns, path):
+    res = nsGet(ns, path, {})
+    if isinstance(res, dict) is not True:
+        return []
+    if '__dir__' in res and res.get('__dir__') != True:
+        return []
+    return list(res.keys())
 
 
 def nsSet(ns, key, val):
     try:
         v = dget(ns, key)
         if nsGet(ns, "/config/var.redefine", True) is True:
+            nsMkdir(ns, os.path.dirname(key))
             dset(ns, key, val)
     except KeyError:
         dnew(ns, key, val)

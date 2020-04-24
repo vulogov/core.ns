@@ -82,10 +82,12 @@ def nsSpawn(ns, name, fun, *args, **kw):
     return ns
 
 def nsDaemon(ns, name, fun, *args, **kw):
-    if len(args) > 0 and args[0] is ns:
+    if (len(args) > 0 and args[0] is ns) or kw.get("_raw", False) is True:
         _fun = fun
     else:
         _fun = partial(fun, ns)
+    if "_raw" in kw:
+        del kw["_raw"]
     g = gevent.Greenlet.spawn(_fun, *args, **kw)
     g.name = name
     nsProcAlloc(ns, name, g)

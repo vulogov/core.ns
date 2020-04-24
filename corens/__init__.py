@@ -18,7 +18,6 @@ from corens.cfg import nsDefaults
 def NS(*args, **kw):
     from corens.mod import nsImport
     ns = _NS()
-
     ns = nsDefaults(ns)
     ns = nsImport(ns, nsGet(ns, "/config/library"))
     cargs = kw.get('args', sys.argv[1:])

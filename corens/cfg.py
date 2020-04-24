@@ -34,7 +34,7 @@ def nsDefaults(ns):
     nsSet(ns, "/etc/daemonize", False)
     nsSet(ns, "/etc/singleCopy", False)
     nsSet(ns, "/etc/listen", {})
-    nsSet(ns, "/etc/listen_rpc", {})
+    nsSet(ns, "/etc/rpc", {})
     # Console and log configuration
     nsSet(ns, "/etc/consoleInBatchDelay", 0.5)
     nsSet(ns, "/etc/consoleAfterBatchDelay", 3)
@@ -43,8 +43,12 @@ def nsDefaults(ns):
     nsSet(ns, "/etc/logInBatchDelay", 0.5)
     nsSet(ns, "/etc/logAfterBatchDelay", 3)
     nsSet(ns, "/etc/logBatchSize", 10)
-
-
+    # RPC
+    nsSet(ns, "/config/defaultRPCListen", "127.0.0.1")
+    nsSet(ns, "/config/defaultInternalListen", "127.0.0.1")
+    nsSet(ns, "/config/defaultInternalPort", 61000)
+    nsSet(ns, "/config/defaultInternalMax", 10)
+    nsSet(ns, "/config/RPCCatchCalls", False)
 
     for c in nsGet(ns, "/config/cfg.path"):
         nsCfgAppendFs(ns, c)

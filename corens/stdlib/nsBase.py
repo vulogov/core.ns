@@ -27,6 +27,7 @@ _lib = {
     '/bin/get': nsGet,
     '/bin/set': nsSet,
     '/bin/ls': nsLs,
+    '/bin/dir': nsDir,
     '/bin/ns': n,
     '/bin/V': V,
     '/bin/I': I,

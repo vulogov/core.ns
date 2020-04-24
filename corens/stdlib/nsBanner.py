@@ -28,6 +28,14 @@ def nsBannerStart(ns, *args, **kw):
                 ["/sys/env/apphome", nsGet(ns, "/sys/env/apphome"), "Application home"],
                 ["/config/user.library", nsGet(ns, "/config/user.library"), "Application library"],
                 ["/etc/daemonize", nsGet(ns, "/etc/daemonize"), "Become daemon ?"],
+                ["/etc/flags/internalServer",nsGet(ns, "/etc/flags/internalServer", False),"Enable internal server"],
+                ["/etc/version", str(nsGet(ns, "/etc/version")), "Application version"],
+                ["/etc/release", nsGet(ns, "/etc/release"), "Application release"],
+                ["/etc/author", nsGet(ns, "/etc/author"), "Author of application"],
+                ["/etc/author.email", nsGet(ns, "/etc/author.email"), "Author's email"],
+                ["/etc/corens/version", str(nsGet(ns, "/etc/corens/version")), "core.NS version"],
+                ["/etc/corens/release", nsGet(ns, "/etc/corens/release"), "core.NS release"],
+                ["/config/RPCCatchCalls", nsGet(ns, "/config/RPCCatchCalls"), "Trace RPC"],
                 ["/config/answer", nsGet(ns, "/config/answer"), "THE ANSWER"],
             ]
         )
