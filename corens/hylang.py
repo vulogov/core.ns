@@ -1,5 +1,6 @@
 import fnmatch
 from corens.ns import nsMkdir, nsSet, nsGet, nsGlobalError, nsLs
+from corens.log import *
 from hy import read_str, eval
 
 def nsImportPfun(ns, env, *vpath):
@@ -18,13 +19,13 @@ def nsHYmkenv(ns, **kw):
     return env
 
 def nsHYInit(ns, *args, **kw):
-    env = nsHYmkenv(ns, **kw)
     nsMkdir(ns, "/pbin")
     nsMkdir(ns, "/psbin")
     nsMkdir(ns, "/etc/hy.startup")
     nsSet(ns, "/sys/hylang.enabled", False)
     nsHyEval(ns, '(nsSet ns "/sys/hylang.enabled" True)')
     nsHyEval(ns, '(nsSet ns "/sys/hylang.enabled.stamp" ((f "stamp")))')
+    nsInfo(ns, "Hy is enabled: {}".format(nsGet(ns, "/sys/hylang.enabled")))
     nsGet(ns, "/dev/queue/open")("hy")
 
 
@@ -39,10 +40,27 @@ def nsHyEval(ns, expression):
         return None
     return _res
 
+def nsHyEvalRestrict(ns, expression, *path):
+    env = {}
+    env = nsImportPfun(ns, env, *path)
+    print(list(env.keys()))
+    try:
+        _expr = read_str(str(expression))
+        _res = eval(_expr, env)
+    except Exception as e:
+        nsGlobalError(ns, "{}".format(e))
+        return None
+    return _res
+
 def nsHyPipeline(ns, expression):
     _exp = u"""(->
     {})""".format(expression)
     return nsHyEval(ns, _exp)
+
+def nsHyPipelineRestrict(ns, expression, *path):
+    _exp = u"""(->
+    {})""".format(expression)
+    return nsHyEvalRestrict(ns, _exp, *path)
 
 def nsHyStartup(ns, *args, **kw):
     d = nsLs(ns, "/etc/hy.startup")

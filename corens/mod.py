@@ -28,6 +28,10 @@ def _nsImport(ns, module):
         except AttributeError:
             _lib = None
         try:
+            _ln = getattr(_module, '_ln')
+        except AttributeError:
+            _ln = None
+        try:
             _tpl = getattr(_module, '_tpl')
         except AttributeError:
             _tpl = None
@@ -57,7 +61,13 @@ def _nsImport(ns, module):
                     nsSet(ns, _path, partial(_actions[k][j], ns))
         if _lib is not None:
             for k in _lib:
-                nsSet(ns, k, partial(_lib[k], ns))
+                if callable(_lib[k]) is True:
+                    nsSet(ns, k, partial(_lib[k], ns))
+                else:
+                    nsSet(ns, k, _lib[k])
+        if _ln is not None:
+            for k in _ln:
+                nsLn(ns, k, _ln[k])
         if _tpl is not None:
             for m in _tpl:
                 nsTemplate(ns, m, **_tpl[m])

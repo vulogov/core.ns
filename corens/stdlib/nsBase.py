@@ -12,6 +12,7 @@ from corens.vns import *
 from corens.init import *
 from corens.mod import p
 from corens.hylang import nsHYInit, nsHyEval, nsHyPipeline, nsHyStartup
+from corens.hylang import nsHyEvalRestrict, nsHyPipelineRestrict
 from corens.env import nsEnvInit, nsEnvSetup, nsEnvRemovePid
 from corens.sig import nsSignalInit, nsSignalSetup
 from corens.txt import nsTxt
@@ -27,6 +28,7 @@ _lib = {
     '/bin/get': nsGet,
     '/bin/set': nsSet,
     '/bin/ls': nsLs,
+    '/bin/ln': nsLn,
     '/bin/dir': nsDir,
     '/bin/ns': n,
     '/bin/V': V,
@@ -36,7 +38,9 @@ _lib = {
     '/bin/text': nsTxt,
     '/bin/txt': nsTxt,
     '/bin/hy': nsHyEval,
+    '/bin/hyR': nsHyEvalRestrict,
     '/bin/h|': nsHyPipeline,
+    '/bin/h|R': nsHyPipelineRestrict,
     '/sbin/hy.startup': nsHyStartup,
     '/bin/import': nsImport,
     '/bin/T': nsTemplate,

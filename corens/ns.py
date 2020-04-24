@@ -93,6 +93,14 @@ def nsDir(ns, path):
         return []
     return list(res.keys())
 
+def nsLn(ns, _from, _to):
+    _data = nsGet(ns, _from)
+    if _data is None or nsGet(ns, _to) is not None:
+        return False
+    nsSet(ns, _to, _data)
+    return True
+
+
 
 def nsSet(ns, key, val):
     try:

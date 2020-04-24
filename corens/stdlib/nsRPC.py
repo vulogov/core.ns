@@ -5,8 +5,29 @@ from corens.log import *
 from corens.rpc import *
 from corens.ns import *
 from corens.sec import *
+from corens.hylang import nsHyEvalRestrict, nsHyPipelineRestrict
 from corens.gevt import nsSchedulerPS, nsSchedulerIntervalJob, nsKillAll
 
+def nsRPCExec(ns, dev_path, cookie, name, *args, **kw):
+    #if nsCookie(ns, cookie) is False:
+    #    return {'err': True, 'msg':'Authentication failed'}
+    if name in nsLs(ns, "{}/root".format(dev_path)):
+        return nsGet(ns, "{}/root/{}".format(dev_path, name))(*args, **kw)
+    return {'err': True, 'msg':'Command {} not found'.format(name)}
+
+def nsRPCHy(ns, dev_path, cookie, expr):
+    #if nsCookie(ns, cookie) is False:
+    #    return {'err': True, 'msg':'Authentication failed'}
+    if "root" in nsLs(ns, dev_path):
+        dev_path = "{}/root".format(dev_path)
+    return nsHyEvalRestrict(ns, expr, dev_path)
+
+def nsRPCHyPipe(ns, dev_path, cookie, expr):
+    #if nsCookie(ns, cookie) is False:
+    #    return {'err': True, 'msg':'Authentication failed'}
+    if "root" in nsLs(ns, dev_path):
+        dev_path = "{}/root".format(dev_path)
+    return nsHyPipelineRestrict(ns, expr, dev_path)
 
 def nsRpcInit(ns, *args, **kw):
     nsconsole(ns, "RPC start")
@@ -40,7 +61,7 @@ def nsInternalServerStart(ns, *args, **kw):
 def nsInternalServerStop(ns, *args, **kw):
     nsconsole(ns, "INTERNAL RPC stop")
 
-def nsInternalServerGet(ns, cookie, path):
+def nsInternalServerGet(ns, dev_path, cookie, path):
     #if nsCookie(ns, cookie) is False:
     #    return {'err': True, 'msg':'Authentication failed'}
     if path[-1] == '/':
@@ -50,7 +71,7 @@ def nsInternalServerGet(ns, cookie, path):
         return nsDir(ns, path)
     return res
 
-def nsInternalServerPS(ns, cookie):
+def nsInternalServerPS(ns, dev_path, cookie):
     #if nsCookie(ns, cookie) is False:
     #    return {'err': True, 'msg':'Authentication failed'}
     out = {}
@@ -58,7 +79,7 @@ def nsInternalServerPS(ns, cookie):
         out[p] = nsGet(ns, "/proc/{}/stamp".format(p))
     return out
 
-def nsInternalServerScheduler(ns, cookie):
+def nsInternalServerScheduler(ns, dev_path, cookie):
     #if nsCookie(ns, cookie) is False:
     #    return {'err': True, 'msg':'Authentication failed'}
     out = {}
@@ -66,12 +87,12 @@ def nsInternalServerScheduler(ns, cookie):
         out[i.name] =  str(i.next_run_time)
     return out
 
-def nsInternalServerTick(ns, cookie):
+def nsInternalServerTick(ns, dev_path, cookie):
     #if nsCookie(ns, cookie) is False:
     #    return {'err': True, 'msg':'Authentication failed'}
     return nsGet(ns, "/dev/time")
 
-def nsInternalServerShutdown(ns, cookie):
+def nsInternalServerShutdown(ns, dev_path, cookie):
     #if nsCookie(ns, cookie) is False:
     #    return {'err': True, 'msg':'Authentication failed'}
     nsInfo(ns, "Shutdown has been requested from internal server")
@@ -99,7 +120,16 @@ _actions = {
     }
 }
 
+_ln = {
+    '/bin/rpcexecutor' : "/usr/local/rpc/internal/handlers/exec",
+    '/bin/rpchy' : "/usr/local/rpc/internal/handlers/hy",
+    '/bin/rpchy|' : "/usr/local/rpc/internal/handlers/hy|",
+}
 _lib = {
+    "/bin/rpcexecutor": nsRPCExec,
+    "/bin/rpchy": nsRPCHy,
+    "/bin/rpchy|": nsRPCHyPipe,
+    "/usr/local/rpc/internal/jail" : ["/bin/id", "/bin/stamp"],
     "/usr/local/rpc/internal/handlers/get" : nsInternalServerGet,
     "/usr/local/rpc/internal/handlers/ps" : nsInternalServerPS,
     "/usr/local/rpc/internal/handlers/scheduler" : nsInternalServerScheduler,

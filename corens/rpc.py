@@ -37,11 +37,19 @@ def nsRPCBringupServer(ns, path, host, port, maxconn):
         return False
     nsInfo(ns, "Configuring RPC server from {}".format(path))
     nsMkdir(ns, dev_path)
+    nsMkdir(ns, "{}/root".format(dev_path))
+    _to_root = nsGet(ns, "{}/jail".format(path), [])
+    for j in _to_root:
+        _n = os.path.basename(j)
+        _dst = "{}/root/{}".format(dev_path, _n)
+        nsInfo(ns, "RPC.JAIL({}): {}".format(name, j))
+        nsLn(ns, j, _dst)
     dispatcher = RPCDispatcher()
     nsSet(ns, "{}/dispatcher".format(dev_path), dispatcher)
     for h in nsLs(ns, "{}/handlers".format(path)):
         nsInfo(ns, "Registering {}->{} ".format(name, h))
-        dispatcher.add_method(nsGet(ns, "{}/handlers/{}".format(path, h)), h)
+        _fun = nsGet(ns, "{}/handlers/{}".format(path, h))
+        dispatcher.add_method(partial(_fun, dev_path), h)
     transport = WsgiServerTransport(queue_class=gevent.queue.Queue)
     nsSet(ns, "{}/transport".format(dev_path), dispatcher)
     nsSet(ns, "{}/listen".format(dev_path), host)
