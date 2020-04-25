@@ -13,11 +13,13 @@ def nsRPCExec(ns, dev_path, cookie, name, *args, **kw):
     #    return {'err': True, 'msg':'Authentication failed'}
     if name in nsLs(ns, "{}/root".format(dev_path)):
         return nsGet(ns, "{}/root/{}".format(dev_path, name))(*args, **kw)
-    return {'err': True, 'msg':'Command {} not found'.format(name)}
+    return {'err': True, 'code': 1, 'msg':'Command {} not found'.format(name)}
 
 def nsRPCHy(ns, dev_path, cookie, expr):
     #if nsCookie(ns, cookie) is False:
     #    return {'err': True, 'msg':'Authentication failed'}
+    if nsGet(ns, "/etc/rpcHyEnabled", False) is False or nsGet(ns, "/etc/flags/rpchy", False) is False:
+        return {'err': True, 'code': 2, 'msg':'Hy is administratively disabled'}
     if "root" in nsLs(ns, dev_path):
         dev_path = "{}/root".format(dev_path)
     return nsHyEvalRestrict(ns, expr, dev_path)
@@ -25,6 +27,8 @@ def nsRPCHy(ns, dev_path, cookie, expr):
 def nsRPCHyPipe(ns, dev_path, cookie, expr):
     #if nsCookie(ns, cookie) is False:
     #    return {'err': True, 'msg':'Authentication failed'}
+    if nsGet(ns, "/etc/rpcHyEnabled", False) is False or nsGet(ns, "/etc/flags/rpchy", False) is False:
+        return {'err': True, 'code': 2, 'msg':'Hy is administratively disabled'}
     if "root" in nsLs(ns, dev_path):
         dev_path = "{}/root".format(dev_path)
     return nsHyPipelineRestrict(ns, expr, dev_path)
@@ -32,9 +36,17 @@ def nsRPCHyPipe(ns, dev_path, cookie, expr):
 def nsRpcInit(ns, *args, **kw):
     nsconsole(ns, "RPC start")
     for r in nsGet(ns, "/etc/rpc"):
-        nsconsole(ns, "RPC service {} on {}".format(r, nsGet(ns, "/etc/rpc")[r]))
-        #if nsRPCBringupServer(ns, "/usr/local/rpc/user/{}".format(r)) is not True:
-        #    nsError(ns, "Unable to bring up RPC {}".format(r))
+        nsconsole(ns, "RPC(user) service {} on {}".format(r, nsGet(ns, "/etc/rpc")[r]))
+        listenHost, listenPort = nsParseListen(ns, nsGet(ns, "/etc/rpc")[r])
+        if listenHost is None:
+            nsconsole(ns, "Failed to parse {}".format(nsGet(ns, "/etc/rpc")[r]))
+            continue
+        if nsRPCBringupServer(ns, "/usr/local/rpc/user/{}".format(r),
+                listenHost,
+                listenPort,
+                nsGet(ns, "/config/defaultRPCMax")) is not True:
+            nsError(ns, "Unable to bring up {}:{} RPC server".format(listenHost, listenPort))
+
 
 
 def nsRpcStop(ns, *args, **kw):
@@ -102,7 +114,9 @@ def nsInternalServerShutdown(ns, dev_path, cookie):
 _mkdir = [
     "/usr/local/rpc/internal",
     "/usr/local/rpc/internal/handlers",
-    "/usr/local/rpc/user"
+    "/usr/local/rpc/user",
+    "/usr/local/rpc/user/test",
+    "/usr/local/rpc/user/test/handlers",
 ]
 
 _init = [

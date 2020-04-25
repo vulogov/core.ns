@@ -1,6 +1,7 @@
 import os.path
 import gevent
 import json
+import re
 import gevent.pywsgi
 import gevent.queue
 import gevent.pool
@@ -16,6 +17,19 @@ from corens.log import *
 from corens.console import nsConsole, nsConsolePush
 from corens.gevt import nsDaemon
 
+def nsParseListen(ns, s):
+    if s[0] == ":":
+        if re.match(r"(\s*)(\d+)(\s*)", s[1:]) is not None:
+            _p = int(s[1:])
+        else:
+            return (None,None)
+        return (nsGet(ns, "/etc/defaultRPCListen", "127.0.0.1"), _p)
+    else:
+        if re.match(r"^(\s*)(.*)(\s*)\:(\s*)(\d+)(\s*)", s) is not None:
+            p = re.split(r"^(\s*)(.*)(\s*)\:(\s*)(\d+)(\s*)", s)
+            return (p[2], int(p[5]))
+    return (None,None)
+
 def nsRPCisServer(ns, path):
     _ls = nsLs(ns, path)
     if "handlers" not in _ls:
@@ -25,6 +39,7 @@ def nsRPCisServer(ns, path):
 def nsRPCCatcher(ns, dev_path, _queue, *args):
     _d = json.loads(args[2])
     _d["dir"] = args[0]
+    _d["path"] = dev_path
     _queue.put(_d)
     if nsGet(ns, "/etc/flags/rpctraceconsole", False) is True:
         nsConsolePush(ns, _d)

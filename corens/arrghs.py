@@ -25,10 +25,14 @@ def nsArgs(ns, args=sys.argv[1:]):
     nsSet(ns, "{}/default/userlib".format(path), [])
     nsSet(ns, "{}/default/listen".format(path), [])
     nsSet(ns, "{}/default/rpc".format(path), [])
+    nsSet(ns, "{}/default/zrpc".format(path), [])
+    nsSet(ns, "{}/default/zmq".format(path), [])
     nsSet(ns, "{}/default/group".format(path), [])
     nsSet(ns, "/etc/argv", [])
     nsSet(ns, "/etc/name", name)
     nsSet(ns, "/etc/rpc", {})
+    nsSet(ns, "/etc/zrpc", {})
+    nsSet(ns, "/etc/zmq", {})
     nsSet(ns, "/etc/groups", [])
     argv = nsGet(ns, "/etc/argv")
     _args = nsGet(ns, path)
@@ -39,7 +43,6 @@ def nsArgs(ns, args=sys.argv[1:]):
     nsMkdir(ns, '/etc/flags')
     isFlag = False
     prev = None
-    config_list = []
     while True:
         a = args.pop(0)
         if a is None or isinstance(a, str) is not True:
@@ -78,8 +81,6 @@ def nsArgs(ns, args=sys.argv[1:]):
                 prevValue.append(a)
             else:
                 nsSet(ns, "{}/{}".format(_path, prev), a)
-            if prev == "conf":
-                config_list.append(a)
             isFlag = False
             continue
         if re.match(r'--(.*)', a) is None and isFlag is False:
@@ -89,26 +90,14 @@ def nsArgs(ns, args=sys.argv[1:]):
             nsMkdir(ns, _path)
             continue
     cfg_files = nsGet(ns, "/config/cfg.files")
-    cfg_files += config_list
+    cfg_files += nsGet(ns, "/etc/args/default/conf")
     userlib = nsGet(ns, "/config/user.library")
     userlib += nsGet(ns, "/etc/args/default/userlib")
-    listen_list = nsGet(ns, "/etc/listen")
-    for l in nsGet(ns, "/etc/args/default/listen"):
-        _name, _listen = nsCfgListenParse(ns, l)
-        if _name not in listen_list:
-            listen_list[_name] = _listen
-    listen_rpc = nsGet(ns, "/etc/rpc")
-    for l in nsGet(ns, "/etc/args/default/rpc"):
-        _name, _listen = nsCfgListenParse(ns, l)
-        if _name not in listen_rpc:
-            listen_rpc[_name] = _listen
-    listen_rpc = nsGet(ns, "/etc/group")
-    for l in nsGet(ns, "/etc/args/default/rpc"):
-        _name, _listen = nsCfgListenParse(ns, l)
-        if _name not in listen_rpc:
-            listen_rpc[_name] = _listen
+    nsArgsParsePopulate(ns, "/etc/args/default/listen", "/etc/listen", nsCfgListenParse)
+    nsArgsParsePopulate(ns, "/etc/args/default/rpc", "/etc/rpc", nsCfgListenParse)
+    nsArgsParsePopulate(ns, "/etc/args/default/zrpc", "/etc/zrpc", nsCfgListenParse)
+    nsArgsParsePopulate(ns, "/etc/args/default/zmq", "/etc/zmq", nsCfgListenParse)
     nsArgsPopulate(ns, "/etc/args/default/group", "/etc/groups")
-    cfg_fs_path = nsGet(ns, "/config/cfg.fs")
     for b in nsGet(ns, "/etc/args/default/bootstrap"):
         nsCfgAppendFs(ns, b)
     nsSet(ns, "/etc/name", nsGet(ns, "/etc/args/default/appname", name))
@@ -130,6 +119,21 @@ def nsArgsPopulate(ns, _from, _to):
     if isinstance(_from_val, list) is not True:
         return
     _to_val += _from_val
+
+def nsArgsParsePopulate(ns, _from, _to, parser):
+    _from_data = nsGet(ns, _from)
+    if _from_data is None:
+        _from_data = []
+        nsSet(ns, _from, _from_data)
+    _to_data = nsGet(ns, _to)
+    if _to_data is None:
+        _to_data = {}
+        nsSet(ns, _to, _to_data)
+    for i in _from_data:
+        _k, _v = parser(ns, i)
+        if _k not in _to_data:
+            _to_data[_k] = _v
+    return _to_data
 
 
 

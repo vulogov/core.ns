@@ -116,7 +116,7 @@ def nsLoopSys(ns):
 def nsKillAll(ns):
     if nsGet(ns, "/sys/greenlets.kill") is True:
         return ns
-    nsGet(ns, "/sys/scheduler").shutdown(wait=False)
+    nsGet(ns, "/sys/scheduler").shutdown(wait=True)
     gevent.killall(nsGet(ns, "/sys/greenlets")[1:])
     gevent.killall(nsGet(ns, "/sys/greenlets.user"))
     nsSet(ns, "/sys/greenlets.kill", True)
