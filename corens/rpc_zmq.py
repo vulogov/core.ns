@@ -1,3 +1,6 @@
+from corens.ns import *
+from corens.log import *
+from corens.console import nsConsole, nsConsolePush
 import zmq.green as zmq
 
 from tinyrpc import RPCClient
