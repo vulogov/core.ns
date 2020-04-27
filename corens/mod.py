@@ -7,6 +7,16 @@ from corens.ns import *
 from corens.log import *
 from corens.tpl import *
 
+def install_and_import(package):
+    import importlib
+    try:
+        importlib.import_module(package)
+    except ImportError:
+        import pip
+        pip.main(['-q', 'install', '-U', '--compile', '--force-reinstall', '--user', package])
+    finally:
+        globals()[package] = importlib.import_module(package)
+
 def nsImport(ns, m):
     if type(m) == list:
         for _m in m:

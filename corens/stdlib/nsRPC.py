@@ -34,6 +34,8 @@ def nsRPCHyPipe(ns, dev_path, cookie, expr):
     return nsHyPipelineRestrict(ns, expr, dev_path)
 
 def nsRpcInit(ns, *args, **kw):
+    if len(nsGet(ns, "/etc/rpc")) == 0:
+        return
     nsconsole(ns, "RPC start")
     for r in nsGet(ns, "/etc/rpc"):
         nsconsole(ns, "RPC(user) service {} on {}".format(r, nsGet(ns, "/etc/rpc")[r]))
@@ -50,6 +52,8 @@ def nsRpcInit(ns, *args, **kw):
 
 
 def nsRpcStop(ns, *args, **kw):
+    if len(nsGet(ns, "/etc/rpc")) == 0:
+        return
     nsconsole(ns, "RPC stop")
 
 def nsInternalServerShutdownWatcher(ns):
@@ -58,19 +62,22 @@ def nsInternalServerShutdownWatcher(ns):
         nsKillAll(ns)
 
 def nsInternalServerStart(ns, *args, **kw):
-    nsconsole(ns, "INTERNAL RPC start")
-    if nsGet(ns, "/etc/flags/internalServer", False) is True:
-        nsconsole(ns, "Internal RPC server enabled")
-        if nsRPCBringupServer(ns, "/usr/local/rpc/internal",
-                nsGet(ns, "/config/defaultInternalListen"),
-                nsGet(ns, "/config/defaultInternalPort"),
-                nsGet(ns, "/config/defaultInternalMax")) is not True:
-            nsError(ns, "Unable to bring up internal RPC server")
-    else:
+    if nsGet(ns, "/etc/flags/internalServer", False) is False:
         nsconsole(ns, "Internal RPC server disabled")
+        return
+    else:
+        nsconsole(ns, "Internal RPC server enabled")
+    nsconsole(ns, "INTERNAL RPC start")
+    if nsRPCBringupServer(ns, "/usr/local/rpc/internal",
+            nsGet(ns, "/config/defaultInternalListen"),
+            nsGet(ns, "/config/defaultInternalPort"),
+            nsGet(ns, "/config/defaultInternalMax")) is not True:
+        nsError(ns, "Unable to bring up internal RPC server")
     nsSchedulerIntervalJob(ns, 15, "ShutdownWatcher", nsInternalServerShutdownWatcher)
 
 def nsInternalServerStop(ns, *args, **kw):
+    if nsGet(ns, "/etc/flags/internalServer", False) is False:
+        return
     nsconsole(ns, "INTERNAL RPC stop")
 
 def nsInternalServerGet(ns, dev_path, cookie, path):
@@ -149,4 +156,5 @@ _lib = {
     "/usr/local/rpc/internal/handlers/scheduler" : nsInternalServerScheduler,
     "/usr/local/rpc/internal/handlers/tick" : nsInternalServerTick,
     "/usr/local/rpc/internal/handlers/shutdown" : nsInternalServerShutdown,
+    "/usr/local/rpc/user/test/handlers/tick" : nsInternalServerTick,
 }

@@ -91,7 +91,11 @@ def nsDir(ns, path):
         return []
     if '__dir__' in res and res.get('__dir__') != True:
         return []
-    return list(res.keys())
+    out = []
+    for k in list(res.keys()):
+        if fnmatch.fnmatch(k, "__*") is not True:
+            out.append(k)
+    return out
 
 def nsLn(ns, _from, _to):
     _data = nsGet(ns, _from)

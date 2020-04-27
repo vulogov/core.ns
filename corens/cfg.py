@@ -35,6 +35,12 @@ def nsDefaults(ns):
     nsSet(ns, "/etc/singleCopy", False)
     nsSet(ns, "/etc/listen", {})
     nsSet(ns, "/etc/rpc", {})
+    # Metaprogramming, blocks and pipelines
+    nsMkdir(ns, "/etc/meta")
+    nsSet(ns, "/etc/defaultTaskLoopSleep", 0.1)
+    nsMkdir(ns, "/tasks")
+    nsMkdir(ns, "/blocks")
+    nsMkdir(ns, "/pipelines")
     # Console and log configuration
     nsSet(ns, "/etc/consoleInBatchDelay", 0.5)
     nsSet(ns, "/etc/consoleAfterBatchDelay", 3)

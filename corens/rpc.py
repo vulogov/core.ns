@@ -66,7 +66,7 @@ def nsRPCBringupServer(ns, path, host, port, maxconn):
         _fun = nsGet(ns, "{}/handlers/{}".format(path, h))
         dispatcher.add_method(partial(_fun, dev_path), h)
     transport = WsgiServerTransport(queue_class=gevent.queue.Queue)
-    nsSet(ns, "{}/transport".format(dev_path), dispatcher)
+    nsSet(ns, "{}/transport".format(dev_path), transport)
     nsSet(ns, "{}/listen".format(dev_path), host)
     nsSet(ns, "{}/port".format(dev_path), host)
     nsConsole(ns, "RPC server {} will be listening on tcp://{}:{}".format(name, host, port))
