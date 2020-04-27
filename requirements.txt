@@ -5,7 +5,7 @@ Arpeggio==1.9.2
 astor==0.8.1
 attrs==19.3.0
 bcrypt==3.1.7
-bleach==3.1.0
+bleach==3.1.4
 boto==2.49.0
 certifi==2019.11.28
 cffi==1.13.2
@@ -59,7 +59,7 @@ scikit-learn==0.22.2.post1
 scipy==1.4.1
 setproctitle==1.1.10
 shell==1.0.1
-six==1.13.0
+six==1.14.0
 texttable==1.6.2
 textX==2.1.0
 tinyrpc==1.0.4
