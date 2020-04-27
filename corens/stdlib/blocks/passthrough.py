@@ -74,6 +74,8 @@ def nsBlockPassServer(ns, block_path, task_path):
 def nsBlockPassExists(ns, block_path, name):
     return name in nsDir(ns, "/tasks/pass")
 
+def nsBlockPassRunning(ns, block_path, name):
+    return "TASK:pass:{}".format(name) in nsDir(ns, "/proc")
 
 _mkdir = [
     "/usr/local/blocks/pass",
@@ -92,5 +94,5 @@ _lib = {
     "/usr/local/blocks/pass/handler": nsBlockNullHandler,
     "/usr/local/blocks/pass/call": nsBlockNullCall,
     "/usr/local/blocks/pass/exists": nsBlockPassExists,
-    "/usr/local/blocks/pass/running": nsBlockPassExists,
+    "/usr/local/blocks/pass/running": nsBlockPassRunning,
 }

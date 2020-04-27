@@ -62,7 +62,7 @@ def nsConsoleProcess(ns, entries=1):
                 puts(str(msg))
         if c >= entries:
             break
-        gevent.sleep(nsGet(ns, "/etc/consoleInBatchDelay", 0.5))
+        gevent.sleep(nsGet(ns, "/etc/consoleInBatchDelay", 0))
 
 def nsConsoleDaemon(ns):
     while True:

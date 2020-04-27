@@ -37,7 +37,7 @@ def nsDefaults(ns):
     nsSet(ns, "/etc/rpc", {})
     # Metaprogramming, blocks and pipelines
     nsMkdir(ns, "/etc/meta")
-    nsSet(ns, "/etc/defaultTaskLoopSleep", 0.1)
+    nsSet(ns, "/etc/defaultTaskLoopSleep", 0)
     nsMkdir(ns, "/tasks")
     nsMkdir(ns, "/blocks")
     nsMkdir(ns, "/pipelines")
@@ -45,8 +45,8 @@ def nsDefaults(ns):
     nsSet(ns, "/etc/consoleInBatchDelay", 0.5)
     nsSet(ns, "/etc/consoleAfterBatchDelay", 3)
     nsSet(ns, "/etc/consoleBatchSize", 10)
-    nsSet(ns, "/etc/consoleEmitter", "tcp://127")
-    nsSet(ns, "/etc/logInBatchDelay", 0.5)
+    nsSet(ns, "/etc/consoleEmitter", "tcp://127.0.0.1:61111")
+    nsSet(ns, "/etc/logInBatchDelay", 0)
     nsSet(ns, "/etc/logAfterBatchDelay", 3)
     nsSet(ns, "/etc/logBatchSize", 10)
     # RPC

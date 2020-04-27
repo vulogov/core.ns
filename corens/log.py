@@ -53,7 +53,7 @@ def nsLogProcess(ns, entries=1):
             logs[log](msg)
         if c >= entries:
             break
-        gevent.sleep(nsGet(ns, "/etc/logInBatchDelay", 0.5))
+        gevent.sleep(nsGet(ns, "/etc/logInBatchDelay", 0))
 
 def nsLogToConsole(ns, msg):
     if nsGet(ns, "/etc/console") is False:
