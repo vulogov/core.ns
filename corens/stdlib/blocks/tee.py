@@ -4,7 +4,7 @@ from gevent.queue import Queue
 from corens.ns import *
 from corens.block import *
 from corens.gevt import nsDaemon
-from corens.stdlib.blocks.passthrough import nsBlockPassIn, nsBlockPassOut, nsBlockPassInGet, nsBlockPassOutGet
+from corens.stdlib.blocks.passthrough import nsBlockPassOutEmpty, nsBlockPassIn, nsBlockPassOut, nsBlockPassInGet, nsBlockPassOutGet
 
 
 def nsBlockTeeInit(ns):
@@ -16,6 +16,7 @@ def nsBlockTeeInit(ns):
     nsSet(ns, "/blocks/tee/server", partial(nsGet(ns, "/usr/local/blocks/tee/server"), "/blocks/tee"))
     nsSet(ns, "/blocks/tee/handler", partial(nsGet(ns, "/usr/local/blocks/tee/handler"), "/blocks/tee"))
     nsSet(ns, "/blocks/tee/call", partial(nsGet(ns, "/usr/local/blocks/tee/call"), "/blocks/tee"))
+    nsSet(ns, "/blocks/tee/empty", partial(nsGet(ns, "/usr/local/blocks/tee/empty"), "/blocks/tee"))
     nsSet(ns, "/blocks/tee/monitor", partial(nsGet(ns, "/usr/local/blocks/tee/monitor"), "/blocks/tee"))
     nsSet(ns, "/blocks/tee/exists", partial(nsGet(ns, "/usr/local/blocks/tee/exists"), "/blocks/tee"))
     nsSet(ns, "/blocks/tee/configured", True)
@@ -37,6 +38,7 @@ def nsBlockTeeTask(ns, block_path, name, _handler=None, **kw):
     nsSet(ns, "{}/inF".format(task_path), partial(nsGet(ns, "/blocks/tee/inF"), task_path))
     nsSet(ns, "{}/out".format(task_path), partial(nsGet(ns, "/blocks/tee/out"), task_path))
     nsSet(ns, "{}/outF".format(task_path), partial(nsGet(ns, "/blocks/tee/outF"), task_path))
+    nsSet(ns, "{}/empty".format(task_path), partial(nsGet(ns, "/blocks/tee/empty"), task_path))
     nsSet(ns, "{}/monitor".format(task_path), partial(nsGet(ns, "/blocks/tee/monitor"), task_path))
     nsSet(ns, "{}/server".format(task_path), partial(nsGet(ns, "/blocks/tee/server"), task_path))
     if _handler is None:
@@ -78,6 +80,7 @@ _lib = {
     "/usr/local/blocks/tee/server": nsBlockLoopSimple,
     "/usr/local/blocks/tee/handler": nsBlockTeeHandler,
     "/usr/local/blocks/tee/call": nsBlockNullCall,
+    "/usr/local/blocks/tee/empty": nsBlockPassOutEmpty,
     "/usr/local/blocks/tee/monitor": nsBlockTeeMonitor,
     "/usr/local/blocks/tee/exists": nsBlockTeeExists,
     "/usr/local/blocks/tee/running": nsBlockTeeRunning,

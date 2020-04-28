@@ -32,7 +32,7 @@ def nsBlockNullTask(ns, block_path, name):
     return True
 
 def nsBlockNullIn(ns, block_path, task_path, data):
-    return True
+    return data
 
 def nsBlockNullOut(ns, block_path, task_path):
     return None

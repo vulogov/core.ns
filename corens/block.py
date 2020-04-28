@@ -44,6 +44,19 @@ def nsBlockLoopSimple(ns, block_path, task_path, *args):
         delay = nsGet(ns, "{}/sleep".format(task_path), nsGet(ns, "/etc/defaultTaskLoopSleep"))
         gevent.sleep(delay)
 
+def nsBlockLoopEmit(ns, block_path, task_path, *args):
+    out_fun = nsGet(ns, "{}/outF".format(task_path))
+    h_fun = nsGet(ns, "{}/handler".format(task_path))
+    while True:
+        data = None
+        if h_fun is not None:
+            args = nsGet(ns, "{}/args".format(task_path), ())
+            kw = nsGet(ns, "{}/kw".format(task_path), {})
+            data = h_fun(data, *args, **kw)
+            if data is not None:
+                out_fun(data)
+        delay = nsGet(ns, "{}/sleep".format(task_path), nsGet(ns, "/etc/defaultTaskLoopSleep"))
+        gevent.sleep(delay)
 
 def nsBlockLoopFilter(ns, block_path, task_path, *args):
     in_fun = nsGet(ns, "{}/inF".format(task_path))
@@ -63,5 +76,19 @@ def nsBlockLoopFilter(ns, block_path, task_path, *args):
                 data = None
         if data is not None:
             out_fun(data)
+        delay = nsGet(ns, "{}/sleep".format(task_path), nsGet(ns, "/etc/defaultTaskLoopSleep"))
+        gevent.sleep(delay)
+
+def nsBlockLoopGate(ns, block_path, task_path, *args):
+    in_fun = nsGet(ns, "{}/inF".format(task_path))
+    out_fun = nsGet(ns, "{}/outF".format(task_path))
+    while True:
+        data = None
+        gate = nsGet(ns, "{}/gate".format(task_path))
+        if gate is True:
+            if in_fun is not None:
+                data = in_fun()
+            if data is not None:
+                out_fun(data)
         delay = nsGet(ns, "{}/sleep".format(task_path), nsGet(ns, "/etc/defaultTaskLoopSleep"))
         gevent.sleep(delay)

@@ -4,7 +4,7 @@ from gevent.queue import Queue
 from corens.ns import *
 from corens.block import *
 from corens.gevt import nsDaemon
-from corens.stdlib.blocks.passthrough import nsBlockPassIn, nsBlockPassOut, nsBlockPassInGet, nsBlockPassOutGet
+from corens.stdlib.blocks.passthrough import nsBlockPassOutEmpty, nsBlockPassIn, nsBlockPassOut, nsBlockPassInGet, nsBlockPassOutGet
 
 def nsBlockFilterInit(ns):
     nsSet(ns, "/blocks/filter/in", partial(nsGet(ns, "/usr/local/blocks/filter/in"), "/blocks/filter"))
@@ -16,6 +16,7 @@ def nsBlockFilterInit(ns):
     nsSet(ns, "/blocks/filter/handler", partial(nsGet(ns, "/usr/local/blocks/filter/handler"), "/blocks/filter"))
     nsSet(ns, "/blocks/filter/reject", partial(nsGet(ns, "/usr/local/blocks/filter/reject"), "/blocks/filter"))
     nsSet(ns, "/blocks/filter/call", partial(nsGet(ns, "/usr/local/blocks/filter/call"), "/blocks/filter"))
+    nsSet(ns, "/blocks/filter/empty", partial(nsGet(ns, "/usr/local/blocks/filter/empty"), "/blocks/filter"))
     nsSet(ns, "/blocks/filter/exists", partial(nsGet(ns, "/usr/local/blocks/filter/exists"), "/blocks/filter"))
     nsSet(ns, "/blocks/filter/configured", True)
     return True
@@ -35,6 +36,7 @@ def nsBlockFilterTask(ns, block_path, name, _handler=None, _reject=None, **kw):
     nsSet(ns, "{}/inF".format(task_path), partial(nsGet(ns, "/blocks/filter/inF"), task_path))
     nsSet(ns, "{}/out".format(task_path), partial(nsGet(ns, "/blocks/filter/out"), task_path))
     nsSet(ns, "{}/outF".format(task_path), partial(nsGet(ns, "/blocks/filter/outF"), task_path))
+    nsSet(ns, "{}/empty".format(task_path), partial(nsGet(ns, "/blocks/filter/empty"), task_path))
     nsSet(ns, "{}/server".format(task_path), partial(nsGet(ns, "/blocks/filter/server"), task_path))
     if _handler is None:
         nsSet(ns, "{}/handler".format(task_path), partial(nsGet(ns, "/blocks/filter/handler"), task_path))
@@ -75,6 +77,7 @@ _lib = {
     "/usr/local/blocks/filter/handler": nsBlockNullTrue,
     "/usr/local/blocks/filter/reject": nsBlockNullHandler,
     "/usr/local/blocks/filter/call": nsBlockNullCall,
+    "/usr/local/blocks/filter/empty": nsBlockPassOutEmpty,
     "/usr/local/blocks/filter/exists": nsBlockFilterExists,
     "/usr/local/blocks/filter/running": nsBlockFilterRunning,
 }

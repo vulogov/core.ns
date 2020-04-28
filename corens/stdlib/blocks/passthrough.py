@@ -14,6 +14,7 @@ def nsBlockPassInit(ns):
     nsSet(ns, "/blocks/pass/server", partial(nsGet(ns, "/usr/local/blocks/pass/server"), "/blocks/pass"))
     nsSet(ns, "/blocks/pass/handler", partial(nsGet(ns, "/usr/local/blocks/pass/handler"), "/blocks/pass"))
     nsSet(ns, "/blocks/pass/call", partial(nsGet(ns, "/usr/local/blocks/pass/call"), "/blocks/pass"))
+    nsSet(ns, "/blocks/pass/empty", partial(nsGet(ns, "/usr/local/blocks/pass/empty"), "/blocks/pass"))
     nsSet(ns, "/blocks/pass/exists", partial(nsGet(ns, "/usr/local/blocks/pass/exists"), "/blocks/pass"))
     nsSet(ns, "/blocks/pass/configured", True)
     return True
@@ -33,8 +34,7 @@ def nsBlockPassTask(ns, block_path, name, _handler=None, **kw):
     nsSet(ns, "{}/inF".format(task_path), partial(nsGet(ns, "/blocks/pass/inF"), task_path))
     nsSet(ns, "{}/out".format(task_path), partial(nsGet(ns, "/blocks/pass/out"), task_path))
     nsSet(ns, "{}/outF".format(task_path), partial(nsGet(ns, "/blocks/pass/outF"), task_path))
-
-
+    nsSet(ns, "{}/empty".format(task_path), partial(nsGet(ns, "/blocks/pass/empty"), task_path))
     nsSet(ns, "{}/server".format(task_path), partial(nsGet(ns, "/blocks/pass/server"), task_path))
     if _handler is None:
         nsSet(ns, "{}/handler".format(task_path), partial(nsGet(ns, "/blocks/pass/handler"), task_path))
@@ -68,6 +68,13 @@ def nsBlockPassOutGet(ns, block_path, task_path):
         return None
     return q.get_nowait()
 
+def nsBlockPassOutEmpty(ns, block_path, task_path):
+    q = nsGet(ns, "{}/out_q".format(task_path))
+    out = []
+    while len(q) > 0:
+        out.append(q.get_nowait())
+    return out
+
 def nsBlockPassServer(ns, block_path, task_path):
     return
 
@@ -93,6 +100,7 @@ _lib = {
     "/usr/local/blocks/pass/server": nsBlockLoopSimple,
     "/usr/local/blocks/pass/handler": nsBlockNullHandler,
     "/usr/local/blocks/pass/call": nsBlockNullCall,
+    "/usr/local/blocks/pass/empty": nsBlockPassOutEmpty,
     "/usr/local/blocks/pass/exists": nsBlockPassExists,
     "/usr/local/blocks/pass/running": nsBlockPassRunning,
 }
