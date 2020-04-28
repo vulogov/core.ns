@@ -1,12 +1,21 @@
 from corens.console import nsconsole
+from corens.log import *
 from corens.ns import *
-from corens.zmq import *
+from textx import metamodel_from_str
+import textx.exceptions
 
 def nsMetaInit(ns, *args, **kw):
     if len(nsDir(ns, "/etc/meta")) == 0:
         return
-    print(nsDir(ns, "/etc/meta"))
     nsconsole(ns, "Metaprogramming start")
+    for m in nsDir(ns, "/etc/meta"):
+        nsInfo(ns, "Bringing metamodel {}".format(m))
+        try:
+            mm = metamodel_from_str(nsGet(ns, "/etc/meta/{}".format(m)), memoization=True)
+        except (IndexError, textx.exceptions.TextXSyntaxError):
+            nsError(ns, "Metamodel {} failed".format(m))
+            continue
+        nsSet(ns, "/meta/{}".format(m), mm)
 
 def nsMetaStop(ns, *args, **kw):
     if len(nsDir(ns, "/etc/meta")) == 0:
@@ -14,11 +23,11 @@ def nsMetaStop(ns, *args, **kw):
     nsconsole(ns, "Metaprogrammming stop")
 
 _init = [
-    "metaprogramming"
+    "z80_metaprogramming"
 ]
 
 _actions = {
-    "metaprogramming": {
+    "z80_metaprogramming": {
         "start" : nsMetaInit,
         "stop" : nsMetaStop
     }

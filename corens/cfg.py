@@ -37,6 +37,7 @@ def nsDefaults(ns):
     nsSet(ns, "/etc/rpc", {})
     # Metaprogramming, blocks and pipelines
     nsMkdir(ns, "/etc/meta")
+    nsMkdir(ns, "/meta")
     nsSet(ns, "/etc/defaultTaskLoopSleep", 0)
     nsMkdir(ns, "/tasks")
     nsMkdir(ns, "/blocks")
