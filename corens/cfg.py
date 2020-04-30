@@ -38,6 +38,7 @@ def nsDefaults(ns):
     # Metaprogramming, blocks and pipelines
     nsMkdir(ns, "/etc/meta")
     nsMkdir(ns, "/meta")
+    nsMkdir(ns, "/metaprocessor")
     nsSet(ns, "/etc/defaultTaskLoopSleep", 0)
     nsMkdir(ns, "/tasks")
     nsMkdir(ns, "/blocks")

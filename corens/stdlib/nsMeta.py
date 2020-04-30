@@ -1,6 +1,8 @@
+from toolz import
 from corens.console import nsconsole
 from corens.log import *
 from corens.ns import *
+from core.meta import *
 from textx import metamodel_from_str
 import textx.exceptions
 
@@ -16,6 +18,7 @@ def nsMetaInit(ns, *args, **kw):
             nsError(ns, "Metamodel {} failed".format(m))
             continue
         nsSet(ns, "/meta/{}".format(m), mm)
+        nsSet(ns, "/metaprocessor/{}".format(m), partial(nsMeta, ns, "/meta/{}".format(m)))
 
 def nsMetaStop(ns, *args, **kw):
     if len(nsDir(ns, "/etc/meta")) == 0:
@@ -31,4 +34,8 @@ _actions = {
         "start" : nsMetaInit,
         "stop" : nsMetaStop
     }
+}
+
+_lib = {
+    '/bin/meta' : nsMeta
 }
